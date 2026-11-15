@@ -1,0 +1,273 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Pengguna {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nama       String   @db.VarChar(150)
+  username   String   @unique @db.VarChar(100)
+  password   String   @db.Text
+  role       String   @default("kasir") @db.VarChar(50)
+  status     String   @default("aktif") @db.VarChar(50)
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+
+  mutasi_barang mutasi_barang[]
+  transaksi     transaksi[]
+  pengiriman    pengiriman[]
+  log_aktivitas log_aktivitas[]
+
+  @@map("pengguna")
+}
+
+model Pelanggan {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  nama          String   @db.VarChar(150)
+  jenis         String   @default("perorangan") @db.VarChar(50)
+  kontak        String?  @db.VarChar(50)
+  alamat        String?  @db.Text
+  batas_kasbon  Decimal? @default(0) @db.Decimal(15, 2)
+  status_kasbon String?  @default("aktif") @db.VarChar(50)
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  transaksi transaksi[]
+  kasbon    kasbon[]
+
+  @@map("pelanggan")
+}
+
+model Barang {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  kode_barang  String   @unique @db.VarChar(50)
+  nama         String   @db.VarChar(200)
+  merk         String?  @default("-") @db.VarChar(100)
+  kategori     String   @db.VarChar(100)
+  barcode      String?  @unique @db.VarChar(100)
+  harga_beli   Decimal  @default(0) @db.Decimal(15, 2)
+  harga        Decimal  @default(0) @db.Decimal(15, 2)
+  stok_awal    Int      @default(0)
+  stok         Int      @default(0)
+  stok_min     Int      @default(5)
+  stok_minimum Decimal  @default(5) @db.Decimal(15, 2)
+  satuan       String   @default("pcs") @db.VarChar(50)
+  keterangan   String?  @db.Text
+  created_at   DateTime @default(now()) @db.Timestamptz(6)
+
+  stok_records         stok[]
+  detail_mutasi_barang detail_mutasi_barang[]
+  detail_transaksi     detail_transaksi[]
+  rencana_restok       rencana_restok[]
+
+  @@map("barang")
+}
+
+model stok {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  barang_id  String   @db.Uuid
+  stok_awal  Int
+  stok_akhir Int
+  tipe       String   @db.VarChar(50)
+  tanggal    DateTime @default(now()) @db.Timestamptz(6)
+
+  barang Barang @relation(fields: [barang_id], references: [id], onDelete: Cascade)
+
+  @@map("stok")
+}
+
+model mutasi_barang {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pengguna_id  String?  @db.Uuid
+  jenis        String   @db.VarChar(50)
+  supplier     String?  @db.VarChar(150)
+  no_referensi String?  @db.VarChar(100)
+  tujuan       String?  @db.VarChar(150)
+  alasan       String?  @db.Text
+  tanggal      DateTime @default(now()) @db.Timestamptz(6)
+
+  pengguna             Pengguna?              @relation(fields: [pengguna_id], references: [id], onDelete: SetNull)
+  detail_mutasi_barang detail_mutasi_barang[]
+
+  @@map("mutasi_barang")
+}
+
+model detail_mutasi_barang {
+  id           String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  mutasi_id    String  @db.Uuid
+  barang_id    String  @db.Uuid
+  jumlah       Int
+  stok_sebelum Int     @default(0)
+  stok_sesudah Int     @default(0)
+  harga_satuan Decimal @default(0) @db.Decimal(15, 2)
+  total_harga  Decimal @default(0) @db.Decimal(15, 2)
+  keterangan   String? @db.Text
+
+  mutasi mutasi_barang @relation(fields: [mutasi_id], references: [id], onDelete: Cascade)
+  barang Barang        @relation(fields: [barang_id], references: [id], onDelete: Cascade)
+
+  @@map("detail_mutasi_barang")
+}
+
+model transaksi {
+  id               String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  no_nota          String   @unique @db.VarChar(100)
+  pengguna_id      String?  @db.Uuid
+  pelanggan_id     String?  @db.Uuid
+  jenis_pembayaran String   @db.VarChar(50)
+  total            Decimal  @default(0) @db.Decimal(15, 2)
+  jumlah_dibayar   Decimal  @default(0) @db.Decimal(15, 2)
+  sisa_tagihan     Decimal  @default(0) @db.Decimal(15, 2)
+  status_bayar     String   @default("menunggu") @db.VarChar(50)
+  perlu_dikirim    Boolean? @default(false)
+  tanggal          DateTime @default(now()) @db.Timestamptz(6)
+
+  pengguna         Pengguna?          @relation(fields: [pengguna_id], references: [id], onDelete: SetNull)
+  pelanggan        Pelanggan?         @relation(fields: [pelanggan_id], references: [id], onDelete: SetNull)
+  detail_transaksi detail_transaksi[]
+  pembayaran       pembayaran[]
+  kasbon           kasbon[]
+  pengiriman       pengiriman[]
+
+  @@map("transaksi")
+}
+
+model detail_transaksi {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaksi_id String   @db.Uuid
+  barang_id    String   @db.Uuid
+  jumlah       Int
+  harga_modal  Decimal  @default(0) @db.Decimal(15, 2)
+  harga_asli   Decimal  @default(0) @db.Decimal(15, 2)
+  harga_nego   Decimal? @db.Decimal(15, 2)
+  harga_satuan Decimal  @default(0) @db.Decimal(15, 2)
+  subtotal     Decimal  @default(0) @db.Decimal(15, 2)
+
+  transaksi transaksi @relation(fields: [transaksi_id], references: [id], onDelete: Cascade)
+  barang    Barang    @relation(fields: [barang_id], references: [id], onDelete: Cascade)
+
+  @@map("detail_transaksi")
+}
+
+model pembayaran {
+  id                 String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaksi_id       String   @db.Uuid
+  metode             String   @db.VarChar(50)
+  nominal            Decimal  @default(0) @db.Decimal(15, 2)
+  bukti_transfer_url String?  @db.Text
+  referensi_gateway  String?  @db.VarChar(150)
+  status             String   @default("berhasil") @db.VarChar(50)
+  tanggal            DateTime @default(now()) @db.Timestamptz(6)
+
+  transaksi transaksi @relation(fields: [transaksi_id], references: [id], onDelete: Cascade)
+
+  @@map("pembayaran")
+}
+
+model kasbon {
+  id                 String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pelanggan_id       String    @db.Uuid
+  transaksi_id       String?   @db.Uuid
+  jumlah_kasbon      Decimal   @default(0) @db.Decimal(15, 2)
+  status             String    @default("menunggu") @db.VarChar(50)
+  alasan_penolakan   String?   @db.Text
+  tanggal_pengajuan  DateTime  @default(now()) @db.Timestamptz(6)
+  tanggal_keputusan  DateTime? @db.Timestamptz(6)
+
+  pelanggan Pelanggan  @relation(fields: [pelanggan_id], references: [id], onDelete: Cascade)
+  transaksi transaksi? @relation(fields: [transaksi_id], references: [id], onDelete: SetNull)
+
+  @@map("kasbon")
+}
+
+model rencana_restok {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  barang_id     String   @db.Uuid
+  jumlah_restok Decimal  @default(0) @db.Decimal(15, 2)
+  restok        Int      @default(0)
+  status        String   @default("direncanakan") @db.VarChar(50)
+  target        String?  @db.VarChar(100)
+  tanggal       DateTime @default(now()) @db.Timestamptz(6)
+
+  barang Barang @relation(fields: [barang_id], references: [id], onDelete: Cascade)
+
+  @@map("rencana_restok")
+}
+
+model pengiriman {
+  id                   String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  transaksi_id         String?   @db.Uuid
+  pengirim_id          String?   @db.Uuid
+  detail_penerima      String?   @db.VarChar(150)
+  nama_penerima_aktual String?   @db.VarChar(150)
+  alamat_tujuan        String    @db.Text
+  status               String    @default("belum_dikirim") @db.VarChar(50)
+  foto_bukti_url       String?   @db.Text
+  foto_bukti_nama      String?   @db.VarChar(255)
+  foto_bukti_mime      String?   @db.VarChar(100)
+  alasan_retur         String?   @db.Text
+  tanggal_penugasan    DateTime  @default(now()) @db.Timestamptz(6)
+  tanggal_terima       DateTime? @db.Timestamptz(6)
+
+  transaksi       transaksi?        @relation(fields: [transaksi_id], references: [id], onDelete: SetNull)
+  pengirim        Pengguna?         @relation(fields: [pengirim_id], references: [id], onDelete: SetNull)
+  laporan_kendala laporan_kendala[]
+
+  @@map("pengiriman")
+}
+
+model laporan_kendala {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pengiriman_id String   @db.Uuid
+  jenis_kendala String   @db.VarChar(50)
+  deskripsi     String   @db.Text
+  created_at    DateTime @default(now()) @db.Timestamptz(6)
+
+  pengiriman pengiriman @relation(fields: [pengiriman_id], references: [id], onDelete: Cascade)
+
+  @@map("laporan_kendala")
+}
+
+model notifikasi {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  jenis        String   @db.VarChar(100)
+  penerima     String   @db.VarChar(150)
+  saluran      String   @default("email") @db.VarChar(50)
+  pesan        String   @db.Text
+  status_kirim String   @default("pending") @db.VarChar(50)
+  waktu        DateTime @default(now()) @db.Timestamptz(6)
+
+  @@map("notifikasi")
+}
+
+model pengaturan_sistem {
+  id                  Int      @id @default(autoincrement())
+  saluran_notifikasi  String   @default("email") @db.VarChar(20)
+  penerima_notifikasi String   @default("muhamadirfan.mi966@gmail.com") @db.VarChar(150)
+  penyedia_gateway    String   @default("midtrans") @db.VarChar(30)
+  kunci_api           String?  @db.Text
+  updated_at          DateTime @default(now()) @db.Timestamptz(6)
+  notifikasi          Boolean? @default(true)
+  notifikasi_detail   String?  @db.Text
+  gateway             String?  @default("midtrans") @db.VarChar(100)
+  gateway_detail      String?  @db.Text
+
+  @@map("pengaturan_sistem")
+}
+
+model log_aktivitas {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  pengguna_id  String?  @db.Uuid
+  modul        String   @db.VarChar(100)
+  aktivitas    String   @db.VarChar(255)
+  data_sebelum Json?
+  data_sesudah Json?
+  waktu        DateTime @default(now()) @db.Timestamptz(6)
+
+  pengguna Pengguna? @relation(fields: [pengguna_id], references: [id], onDelete: SetNull)
+
+  @@map("log_aktivitas")
+}
