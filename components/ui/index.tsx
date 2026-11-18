@@ -2,10 +2,7 @@
 
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import type { ComponentProps, ReactNode } from "react";
-import Link from "next/link";
-import { usePathname } from "next/navigation";
-import { Search } from "lucide-react";
+import type { ReactNode } from "react";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -18,6 +15,13 @@ export { Switch } from "./switch";
 export { SearchField } from "./search-field";
 export { NavLink } from "./nav-link";
 export { Card, CardHeader, CardTitle, CardContent } from "./card";
+export { StatusBadge } from "./status-badge";
+export { PageHeader } from "./page-header";
+export { CustomSelect } from "./custom-select";
+export { ResponsiveTabs } from "./responsive-tabs";
+export { CustomDatePicker } from "./custom-date-picker";
+export { TablePagination } from "./table-pagination";
+import { CustomSelect as CustomSelectComp, type CustomSelectProps } from "./custom-select";
 
 export function Tab({
   active,
@@ -34,11 +38,12 @@ export function Tab({
     <button
       type="button"
       onClick={onClick}
+      aria-pressed={active}
       className={cn(
-        "px-3 py-1.5 rounded-md text-xs font-medium transition-colors cursor-pointer",
+        "min-h-10 rounded-md px-3 py-1.5 text-base font-semibold transition-colors cursor-pointer",
         active
-          ? "bg-white text-gray-900 shadow-xs"
-          : "text-gray-600 hover:text-gray-900",
+          ? "bg-white text-[#1D4ED8] shadow-sm"
+          : "text-[#64748B] hover:text-[#1E293B]",
         className
       )}
     >
@@ -54,7 +59,7 @@ export function Label({
   return (
     <label
       className={cn(
-        "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
+        "text-base font-semibold leading-none text-[#1E293B] peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
         className
       )}
       {...props}
@@ -62,21 +67,18 @@ export function Label({
   );
 }
 
+const FIELD =
+  "flex w-full rounded-md border border-[#CBD5E1] bg-white px-3 py-2 text-base text-[#1E293B] placeholder:text-[#64748B] focus-visible:outline-none focus-visible:border-[#2563EB] focus-visible:ring-2 focus-visible:ring-[#2563EB]/25 disabled:cursor-not-allowed disabled:bg-[#F1F5F9] disabled:opacity-70";
+
 export function Select({
   className,
   children,
   ...props
-}: React.SelectHTMLAttributes<HTMLSelectElement>) {
+}: CustomSelectProps) {
   return (
-    <select
-      className={cn(
-        "flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
-      {...props}
-    >
+    <CustomSelectComp className={cn("w-full", className)} {...props}>
       {children}
-    </select>
+    </CustomSelectComp>
   );
 }
 
@@ -84,15 +86,7 @@ export function Textarea({
   className,
   ...props
 }: React.TextareaHTMLAttributes<HTMLTextAreaElement>) {
-  return (
-    <textarea
-      className={cn(
-        "flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50",
-        className
-      )}
-      {...props}
-    />
-  );
+  return <textarea className={cn(FIELD, "min-h-[96px]", className)} {...props} />;
 }
 
 export function Table({
@@ -102,7 +96,7 @@ export function Table({
 }: React.TableHTMLAttributes<HTMLTableElement>) {
   return (
     <div className="overflow-x-auto">
-      <table className={cn("w-full caption-bottom text-sm", className)} {...props}>
+      <table className={cn("w-full caption-bottom text-base", className)} {...props}>
         {children}
       </table>
     </div>
@@ -115,7 +109,7 @@ export function Thead({
   ...props
 }: React.HTMLAttributes<HTMLTableSectionElement>) {
   return (
-    <thead className={cn("border-border/60 bg-muted/40", className)} {...props}>
+    <thead className={cn("bg-[#F8FAFC]", className)} {...props}>
       {children}
     </thead>
   );
@@ -127,7 +121,7 @@ export function Trow({
   ...props
 }: React.HTMLAttributes<HTMLTableRowElement>) {
   return (
-    <tr className={cn("border-b border-border/40", className)} {...props}>
+    <tr className={cn("border-b border-[#E2E8F0]", className)} {...props}>
       {children}
     </tr>
   );
@@ -141,7 +135,7 @@ export function Th({
   return (
     <th
       className={cn(
-        "px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-muted-foreground",
+        "px-4 py-3 text-left text-base font-semibold text-[#64748B]",
         className
       )}
       {...props}
@@ -157,7 +151,7 @@ export function Td({
   ...props
 }: React.TdHTMLAttributes<HTMLTableCellElement>) {
   return (
-    <td className={cn("px-3 py-2 text-sm", className)} {...props}>
+    <td className={cn("px-4 py-3 text-base", className)} {...props}>
       {children}
     </td>
   );
@@ -173,17 +167,17 @@ export function Tag({
   className?: string;
 }) {
   const map: Record<string, string> = {
-    slate: "bg-slate-100 text-slate-700",
-    green: "bg-emerald-100 text-emerald-700",
-    amber: "bg-amber-100 text-amber-700",
-    red: "bg-red-100 text-red-700",
-    blue: "bg-blue-100 text-blue-700",
-    purple: "bg-purple-100 text-purple-700",
+    slate: "bg-[#F1F5F9] text-[#334155]",
+    green: "bg-[#DCFCE7] text-[#15803D]",
+    amber: "bg-[#FEF3C7] text-[#92400E]",
+    red: "bg-[#FEE2E2] text-[#B91C1C]",
+    blue: "bg-[#DBEAFE] text-[#1D4ED8]",
+    purple: "bg-[#DBEAFE] text-[#1D4ED8]",
   };
   return (
     <span
       className={cn(
-        "inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium",
+        "inline-flex items-center rounded-full px-2.5 py-0.5 text-base font-semibold",
         map[color],
         className
       )}
