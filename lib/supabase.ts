@@ -94,15 +94,34 @@ export async function getCurrentUser(): Promise<POSUser | null> {
     // Supabase auth session not available
   }
 
-  // 3. Fallback default user (Admin)
-  return {
-    id: "a0000000-0000-0000-0000-000000000001",
-    nama: "Arif Muhamad (Admin)",
-    username: "admin",
-    email: "admin@kurnia.local",
-    role: "admin",
-    status: "aktif",
-  };
+  // 3. Fallback dari tabel pengguna aktif di database (tanpa data dummy statis)
+  try {
+    const { data: adminRow } = await supabase
+      .from("pengguna")
+      .select("id, nama, username, role, status")
+      .eq("role", "admin")
+      .eq("status", "aktif")
+      .order("id", { ascending: true })
+      .limit(1)
+      .maybeSingle();
+
+    if (adminRow) {
+      const dbUser: POSUser = {
+        id: String(adminRow.id),
+        nama: String(adminRow.nama),
+        username: String(adminRow.username),
+        email: usernameToSyntheticEmail(String(adminRow.username)),
+        role: adminRow.role as Role,
+        status: String(adminRow.status),
+      };
+      setCurrentSessionUser(dbUser);
+      return dbUser;
+    }
+  } catch {
+    // Abaikan jika koneksi database gagal saat memuat sesi awal
+  }
+
+  return null;
 }
 
 export async function checkPermission(requiredPath: string): Promise<boolean> {

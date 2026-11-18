@@ -1,27 +1,98 @@
 @import "tailwindcss";
 
+/*
+  Panduan Gaya POS CV Kurnia Mandiri
+  Tata letak mengikuti template Dashbyte (boiler-plate-laravel-pustekinfo):
+  sidebar berkelompok dengan dropdown sub-menu, header 72px, kartu dengan bayangan tipis,
+  mendukung Mode Terang / Gelap serta pengaturan Ukuran Teks (Kecil, Sedang, Besar).
+*/
 :root {
-  --background: #ffffff;
-  --foreground: #0f172a;
-  --card: #ffffff;
-  --card-foreground: #0f172a;
-  --border: #e2e8f0;
-  --input: #e2e8f0;
-  --primary: #2563eb;
+  /* Warna inti sesuai Panduan Gaya (Mode Terang) */
+  --km-primary: #2563eb;      /* Primer Utama: tombol utama, menu aktif */
+  --km-primary-dark: #1d4ed8; /* Primer Tua: teks tombol, sorotan */
+  --km-accent: #f59e0b;       /* Aksen Utama: peringatan saja */
+  --km-accent-text: #92400e;  /* Teks di atas latar oranye muda */
+  --km-page: #f8fafc;         /* Latar Halaman */
+  --km-card: #ffffff;         /* Latar Kartu */
+  --km-text: #1e293b;         /* Teks Utama */
+  --km-text-muted: #64748b;   /* Teks Sekunder */
+  --km-success: #16a34a;      /* Sukses Utama */
+  --km-danger: #dc2626;       /* Bahaya Utama */
+  --km-line: #cbd5e1;         /* Garis Utama */
+  --km-line-soft: #e2e8f0;    /* Garis pemisah di dalam kartu */
+
+  /* Alias untuk komponen */
+  --background: var(--km-page);
+  --foreground: var(--km-text);
+  --card: var(--km-card);
+  --card-foreground: var(--km-text);
+  --border: var(--km-line-soft);
+  --input: var(--km-line);
+  --primary: var(--km-primary);
   --primary-foreground: #ffffff;
   --secondary: #f1f5f9;
-  --secondary-foreground: #334155;
-  --muted: #f8fafc;
-  --muted-foreground: #64748b;
+  --secondary-foreground: var(--km-text);
+  --muted: var(--km-page);
+  --muted-foreground: var(--km-text-muted);
   --accent: #f1f5f9;
-  --accent-foreground: #0f172a;
-  --destructive: #ef4444;
+  --accent-foreground: var(--km-text);
+  --destructive: var(--km-danger);
   --destructive-foreground: #ffffff;
-  --ring: #2563eb;
-  --radius: 0.5rem;
+  --ring: var(--km-primary);
+  --radius: 0.375rem;
+
+  /* Bayangan kartu Dashbyte (.card-one) */
+  --km-shadow-card: 0 1px 2px rgba(204, 210, 218, 0.07),
+    0 2px 4px rgba(204, 210, 218, 0.07), 0 4px 8px rgba(204, 210, 218, 0.07),
+    0 8px 16px rgba(204, 210, 218, 0.07), 0 16px 32px rgba(204, 210, 218, 0.07),
+    0 32px 64px rgba(204, 210, 218, 0.07);
+}
+
+/* Mode Gelap (data-skin="dark") mengikuti palet Dashbyte Dark */
+html[data-skin="dark"] {
+  --km-page: #0f172a;
+  --km-card: #1e293b;
+  --km-text: #f8fafc;
+  --km-text-muted: #94a3b8;
+  --km-line: #334155;
+  --km-line-soft: #283548;
+
+  --background: var(--km-page);
+  --foreground: var(--km-text);
+  --card: var(--km-card);
+  --card-foreground: var(--km-text);
+  --border: var(--km-line-soft);
+  --input: var(--km-line);
+  --secondary: #334155;
+  --secondary-foreground: #f8fafc;
+  --muted: #1e293b;
+  --muted-foreground: #94a3b8;
+  --accent: #334155;
+  --accent-foreground: #f8fafc;
+
+  --km-shadow-card: 0 2px 8px rgba(0, 0, 0, 0.28),
+    0 8px 24px rgba(0, 0, 0, 0.22);
 }
 
 @theme {
+  --font-sans: var(--font-jakarta), ui-sans-serif, system-ui, sans-serif;
+
+  /* Skala teks proporsional terhadap ukuran dasar html */
+  --text-xs: 0.9375rem;
+  --text-xs--line-height: 1.375rem;
+  --text-sm: 1rem;
+  --text-sm--line-height: 1.5rem;
+  --text-base: 1.0625rem;
+  --text-base--line-height: 1.6rem;
+  --text-lg: 1.125rem;
+  --text-lg--line-height: 1.625rem;
+  --text-xl: 1.375rem;
+  --text-xl--line-height: 1.875rem;
+  --text-2xl: 1.875rem;
+  --text-2xl--line-height: 2.375rem;
+  --text-3xl: 2rem;
+  --text-3xl--line-height: 2.5rem;
+
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -39,13 +110,378 @@
   --color-destructive: var(--destructive);
   --color-destructive-foreground: var(--destructive-foreground);
   --color-ring: var(--ring);
+
+  /* Abu-abu disamakan dengan skala slate panduan */
+  --color-gray-50: #f8fafc;
+  --color-gray-100: #f1f5f9;
+  --color-gray-200: #e2e8f0;
+  --color-gray-300: #cbd5e1;
+  --color-gray-400: #64748b;
+  --color-gray-500: #64748b;
+  --color-gray-600: #475569;
+  --color-gray-700: #334155;
+  --color-gray-800: #1e293b;
+  --color-gray-900: #1e293b;
+
+  /* Hijau sukses memakai #16A34A */
+  --color-emerald-50: #f0fdf4;
+  --color-emerald-100: #dcfce7;
+  --color-emerald-200: #bbf7d0;
+  --color-emerald-500: #16a34a;
+  --color-emerald-600: #16a34a;
+  --color-emerald-700: #15803d;
+  --color-emerald-800: #166534;
+
+  /* Oranye: teks memakai #92400E agar terbaca */
+  --color-amber-600: #92400e;
+  --color-amber-700: #92400e;
+  --color-amber-800: #92400e;
+
+  /* Warna di luar panduan diarahkan ke biru primer */
+  --color-purple-50: #eff6ff;
+  --color-purple-100: #dbeafe;
+  --color-purple-600: #2563eb;
+  --color-purple-700: #1d4ed8;
+  --color-indigo-600: #2563eb;
+  --color-indigo-700: #1d4ed8;
 }
 
-* {
-  border-color: var(--border);
+/* Override palet abu-abu, slate & hover saat Mode Gelap aktif */
+html[data-skin="dark"] {
+  --color-gray-50: #162032;
+  --color-gray-100: #1e293b;
+  --color-gray-200: #334155;
+  --color-gray-300: #475569;
+  --color-gray-400: #94a3b8;
+  --color-gray-500: #94a3b8;
+  --color-gray-600: #cbd5e1;
+  --color-gray-700: #e2e8f0;
+  --color-gray-800: #f1f5f9;
+  --color-gray-900: #f8fafc;
+
+  --color-slate-50: #162032;
+  --color-slate-100: #1e293b;
+  --color-slate-200: #334155;
+  --color-slate-300: #475569;
+  --color-slate-400: #94a3b8;
+  --color-slate-500: #94a3b8;
+  --color-slate-600: #cbd5e1;
+  --color-slate-700: #e2e8f0;
+  --color-slate-800: #f1f5f9;
+  --color-slate-900: #f8fafc;
+}
+
+html[data-skin="dark"] .bg-white {
+  background-color: #1e293b !important;
+  color: #f8fafc;
+}
+
+html[data-skin="dark"] .bg-\[\#F8FAFC\],
+html[data-skin="dark"] .bg-\[\#F8FAFC\]\/60 {
+  background-color: #0f172a !important;
+}
+
+html[data-skin="dark"] .bg-\[\#F1F5F9\] {
+  background-color: #162032 !important;
+}
+
+html[data-skin="dark"] .bg-\[\#EFF6FF\],
+html[data-skin="dark"] .bg-\[\#EFF6FF\]\/50,
+html[data-skin="dark"] .bg-\[\#EFF6FF\]\/60,
+html[data-skin="dark"] .bg-\[\#DBEAFE\],
+html[data-skin="dark"] .bg-blue-50 {
+  background-color: rgba(37, 99, 235, 0.22) !important;
+}
+
+html[data-skin="dark"] .bg-\[\#DCFCE7\],
+html[data-skin="dark"] .bg-emerald-50,
+html[data-skin="dark"] .bg-emerald-50\/40,
+html[data-skin="dark"] .bg-emerald-50\/30 {
+  background-color: rgba(22, 163, 74, 0.2) !important;
+}
+
+html[data-skin="dark"] .bg-\[\#FEF3C7\],
+html[data-skin="dark"] .bg-amber-50 {
+  background-color: rgba(245, 158, 11, 0.2) !important;
+}
+
+html[data-skin="dark"] .bg-\[\#FEE2E2\],
+html[data-skin="dark"] .bg-\[\#FEF2F2\],
+html[data-skin="dark"] .bg-red-50,
+html[data-skin="dark"] .bg-red-50\/60 {
+  background-color: rgba(220, 38, 38, 0.2) !important;
+}
+
+html[data-skin="dark"] .bg-gray-50\/50 {
+  background-color: rgba(22, 32, 50, 0.75) !important;
+}
+
+/* Override hover latar agar tidak menyala putih/pastel saat Mode Gelap */
+html[data-skin="dark"] .hover\:bg-\[\#F8FAFC\]:hover,
+html[data-skin="dark"] .hover\:bg-\[\#F1F5F9\]:hover,
+html[data-skin="dark"] .hover\:bg-\[\#E2E8F0\]:hover,
+html[data-skin="dark"] .hover\:bg-\[\#E2E8F0\]\/70:hover,
+html[data-skin="dark"] .hover\:bg-gray-50:hover,
+html[data-skin="dark"] .hover\:bg-gray-100:hover,
+html[data-skin="dark"] .hover\:bg-slate-50:hover,
+html[data-skin="dark"] .hover\:bg-slate-100:hover,
+html[data-skin="dark"] .hover\:bg-white:hover,
+html[data-skin="dark"] .hover\:bg-white\/60:hover {
+  background-color: #283548 !important;
+}
+
+html[data-skin="dark"] .group:hover .group-hover\:bg-white {
+  background-color: #0f172a !important;
+}
+
+html[data-skin="dark"] .hover\:bg-\[\#EFF6FF\]:hover,
+html[data-skin="dark"] .hover\:bg-\[\#EFF6FF\]\/40:hover,
+html[data-skin="dark"] .hover\:bg-\[\#EFF6FF\]\/50:hover,
+html[data-skin="dark"] .hover\:bg-\[\#DBEAFE\]:hover,
+html[data-skin="dark"] .hover\:bg-blue-50:hover,
+html[data-skin="dark"] .hover\:bg-blue-100:hover {
+  background-color: rgba(37, 99, 235, 0.3) !important;
+}
+
+html[data-skin="dark"] .hover\:bg-\[\#FEF2F2\]:hover,
+html[data-skin="dark"] .hover\:bg-red-50:hover {
+  background-color: rgba(220, 38, 38, 0.28) !important;
+}
+
+html[data-skin="dark"] .hover\:bg-\[\#DCFCE7\]:hover,
+html[data-skin="dark"] .hover\:bg-emerald-100:hover {
+  background-color: rgba(22, 163, 74, 0.28) !important;
+}
+
+html[data-skin="dark"] .hover\:bg-amber-50:hover {
+  background-color: rgba(245, 158, 11, 0.28) !important;
+}
+
+/* Teks & teks saat dihover di Mode Gelap agar kontras AA tetap tinggi */
+html[data-skin="dark"] .text-\[\#1E293B\],
+html[data-skin="dark"] .text-\[\#334155\],
+html[data-skin="dark"] .hover\:text-\[\#1E293B\]:hover,
+html[data-skin="dark"] .hover\:text-gray-800:hover,
+html[data-skin="dark"] .hover\:text-gray-600:hover {
+  color: #f8fafc !important;
+}
+
+html[data-skin="dark"] .text-\[\#64748B\],
+html[data-skin="dark"] .text-\[\#475569\] {
+  color: #94a3b8 !important;
+}
+
+html[data-skin="dark"] .text-\[\#1D4ED8\],
+html[data-skin="dark"] .text-\[\#2563EB\],
+html[data-skin="dark"] .text-blue-600,
+html[data-skin="dark"] .text-blue-700,
+html[data-skin="dark"] .text-blue-900,
+html[data-skin="dark"] .hover\:text-\[\#1D4ED8\]:hover,
+html[data-skin="dark"] .hover\:text-\[\#2563EB\]:hover,
+html[data-skin="dark"] .hover\:text-blue-600:hover,
+html[data-skin="dark"] .group:hover .group-hover\:text-\[\#1D4ED8\],
+html[data-skin="dark"] .group:hover .group-hover\:text-\[\#2563EB\] {
+  color: #93c5fd !important;
+}
+
+html[data-skin="dark"] .group:hover .group-hover\:text-white {
+  color: #ffffff !important;
+}
+
+html[data-skin="dark"] .hover\:border-\[\#CBD5E1\]:hover {
+  border-color: #475569 !important;
+}
+
+html[data-skin="dark"] .hover\:border-\[\#2563EB\]:hover,
+html[data-skin="dark"] .border-\[\#2563EB\] {
+  border-color: #60a5fa !important;
+}
+
+html[data-skin="dark"] .hover\:border-\[\#BBF7D0\]:hover {
+  border-color: rgba(74, 222, 128, 0.55) !important;
+}
+
+html[data-skin="dark"] .text-\[\#15803D\],
+html[data-skin="dark"] .text-\[\#16A34A\],
+html[data-skin="dark"] .text-emerald-600,
+html[data-skin="dark"] .text-emerald-700,
+html[data-skin="dark"] .text-emerald-800 {
+  color: #6ee7b7 !important;
+}
+
+html[data-skin="dark"] .text-\[\#92400E\],
+html[data-skin="dark"] .text-amber-700,
+html[data-skin="dark"] .text-amber-800,
+html[data-skin="dark"] .hover\:text-amber-600:hover {
+  color: #fcd34d !important;
+}
+
+html[data-skin="dark"] .text-\[\#DC2626\],
+html[data-skin="dark"] .text-\[\#B91C1C\],
+html[data-skin="dark"] .text-red-600,
+html[data-skin="dark"] .text-red-700,
+html[data-skin="dark"] .hover\:text-red-600:hover {
+  color: #fca5a5 !important;
+}
+
+html[data-skin="dark"] .border-\[\#E2E8F0\],
+html[data-skin="dark"] .border-\[\#F1F5F9\],
+html[data-skin="dark"] .border-\[\#CBD5E1\],
+html[data-skin="dark"] .border-gray-200,
+html[data-skin="dark"] .border-gray-200\/60,
+html[data-skin="dark"] .border-gray-200\/70,
+html[data-skin="dark"] .border-gray-300,
+html[data-skin="dark"] .border-slate-200 {
+  border-color: #334155 !important;
+}
+
+html[data-skin="dark"] .border-red-200,
+html[data-skin="dark"] .border-red-300,
+html[data-skin="dark"] .border-\[\#FECACA\] {
+  border-color: rgba(248, 113, 113, 0.38) !important;
+}
+
+html[data-skin="dark"] .border-emerald-200,
+html[data-skin="dark"] .border-emerald-300,
+html[data-skin="dark"] .border-\[\#BBF7D0\] {
+  border-color: rgba(74, 222, 128, 0.35) !important;
+}
+
+html[data-skin="dark"] .border-blue-200,
+html[data-skin="dark"] .border-\[\#BFDBFE\] {
+  border-color: rgba(96, 165, 250, 0.38) !important;
+}
+
+html[data-skin="dark"] .border-amber-200 {
+  border-color: rgba(251, 191, 36, 0.38) !important;
+}
+
+html[data-skin="dark"] .divide-\[\#E2E8F0\] > :not(:last-child),
+html[data-skin="dark"] .divide-\[\#F1F5F9\] > :not(:last-child),
+html[data-skin="dark"] .divide-\[\#CBD5E1\] > :not(:last-child) {
+  border-color: #334155 !important;
+}
+
+html[data-skin="dark"] input:not([type="checkbox"]):not([type="radio"]),
+html[data-skin="dark"] textarea,
+html[data-skin="dark"] select {
+  background-color: #0f172a;
+  color: #f8fafc;
+  border-color: #475569;
+}
+
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+}
+
+/* Pengaturan Ukuran Teks: Kecil (14px), Sedang (16px), Besar (18px) */
+html {
+  font-size: 16px;
+  transition: font-size 0.15s ease;
+}
+
+html[data-size="kecil"] {
+  font-size: 14px;
+}
+
+html[data-size="sedang"] {
+  font-size: 16px;
+}
+
+html[data-size="besar"] {
+  font-size: 17.5px;
 }
 
 body {
   background-color: var(--background);
   color: var(--foreground);
+  font-family: var(--font-sans);
+  font-size: 1rem;
+  line-height: 1.5rem;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Affordance interaktif (R-39 & R-32) */
+a[href],
+button:not(:disabled),
+summary,
+select:not(:disabled),
+label[for],
+input[type="checkbox"]:not(:disabled),
+input[type="radio"]:not(:disabled),
+[role="button"]:not([aria-disabled="true"]),
+[role="tab"]:not([aria-disabled="true"]),
+[role="switch"]:not([aria-disabled="true"]) {
+  cursor: pointer;
+}
+
+button:disabled,
+select:disabled,
+input:disabled,
+textarea:disabled,
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+input:focus,
+input:focus-visible,
+textarea:focus,
+textarea:focus-visible,
+select:focus,
+select:focus-visible {
+  outline: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@layer components {
+  /* Kartu Dashbyte (.card-one): tanpa garis, sudut 6px, bayangan berlapis tipis */
+  .km-card {
+    background-color: var(--km-card);
+    color: var(--km-text);
+    border-radius: 6px;
+    box-shadow: var(--km-shadow-card);
+  }
+
+  /* Judul halaman: responsif di mobile hingga desktop */
+  .page-title {
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    line-height: 1.25;
+    font-weight: 700;
+    color: var(--km-text);
+    letter-spacing: -0.02em;
+  }
+
+  /* Label grup menu di sidebar gaya Dashbyte */
+  .nav-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.625rem 1.25rem 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--km-text-muted);
+  }
+}
+
+@media print {
+  body {
+    background: #ffffff;
+  }
+  .km-card {
+    box-shadow: none;
+  }
 }
