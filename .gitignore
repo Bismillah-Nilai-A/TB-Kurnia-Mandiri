@@ -52,4 +52,5 @@ public/icon/icon.svg/.hermes-tmp*
 .devin/
 .agents/
 skills-lock.json
+stop-slop/
 
