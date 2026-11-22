@@ -1,0 +1,1264 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Panduan Gaya - POS CV Kurnia Mandiri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --font-jakarta: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+
+      --km-primary: #2563EB;
+      --km-primary-dark: #1D4ED8;
+      --km-primary-soft: #EFF6FF;
+      --km-primary-badge: #DBEAFE;
+      --km-accent: #F59E0B;
+      --km-accent-soft: #FEF3C7;
+      --km-accent-text: #92400E;
+      --km-success: #16A34A;
+      --km-success-soft: #DCFCE7;
+      --km-success-text: #15803D;
+      --km-danger: #DC2626;
+      --km-danger-soft: #FEE2E2;
+      --km-danger-text: #B91C1C;
+      --km-page: #F8FAFC;
+      --km-card: #FFFFFF;
+      --km-text: #1E293B;
+      --km-text-secondary: #334155;
+      --km-text-muted: #64748B;
+      --km-line: #CBD5E1;
+      --km-line-soft: #E2E8F0;
+      --km-surface-muted: #F1F5F9;
+
+      --wf-ink: #0F172A;
+      --wf-muted: #475569;
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family: var(--font-jakarta);
+      font-size: 16px;
+      line-height: 1.5;
+      color: var(--km-text);
+      background-color: var(--km-page);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a[href],
+    button,
+    label[for],
+    [role="button"],
+    [role="tab"],
+    [role="option"] {
+      cursor: pointer;
+    }
+
+    button:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+
+    a:focus-visible,
+    button:focus-visible,
+    input:focus-visible {
+      outline: 2px solid var(--km-primary);
+      outline-offset: 2px;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.01ms !important;
+      }
+    }
+
+    .sg-shell {
+      max-width: 1120px;
+      margin: 0 auto;
+      padding: 28px 16px 64px;
+    }
+
+    @media (min-width: 768px) {
+      .sg-shell {
+        padding: 36px 24px 80px;
+      }
+    }
+
+    /* Baris Status di Atas Kartu Utama (Seperti Contoh Gambar) */
+    .sg-top-badges {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px 18px;
+      padding: 4px 8px 28px;
+      align-items: center;
+    }
+
+    @media (min-width: 640px) {
+      .sg-top-badges {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .sg-top-badges {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    /* Kartu Utama */
+    .sg-card {
+      background: #FFFFFF;
+      border: 1px solid var(--km-line-soft);
+      border-radius: 16px;
+      padding: 28px 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 36px;
+    }
+
+    @media (min-width: 768px) {
+      .sg-card {
+        padding: 36px 40px;
+      }
+    }
+
+    .sg-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--km-text);
+      margin: 0;
+      letter-spacing: -0.02em;
+    }
+
+    .sg-section {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .sg-heading {
+      font-size: 1.125rem;
+      font-weight: 700;
+      color: var(--km-text);
+      margin: 0;
+    }
+
+    .sg-subheading {
+      font-size: 0.875rem;
+      font-weight: 700;
+      color: var(--km-text-secondary);
+      margin: 6px 0 0;
+    }
+
+    .sg-note {
+      font-size: 0.875rem;
+      color: var(--km-text-muted);
+      line-height: 1.55;
+      margin: 4px 0 0;
+    }
+
+    /* Grid Warna (5 Kolom) */
+    .sg-color-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 18px 16px;
+    }
+
+    @media (min-width: 640px) {
+      .sg-color-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .sg-color-grid {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+      }
+    }
+
+    .sg-color-item {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .sg-swatch {
+      height: 56px;
+      width: 100%;
+      border-radius: 10px;
+    }
+
+    .sg-swatch-border {
+      border: 1px solid var(--km-line-soft);
+    }
+
+    .sg-color-title {
+      font-size: 0.8125rem;
+      font-weight: 700;
+      color: var(--km-text);
+      margin-top: 4px;
+    }
+
+    .sg-color-use {
+      font-size: 0.75rem;
+      color: var(--km-text-muted);
+    }
+
+    /* Ukuran Teks */
+    .sg-type-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    /* Status Badge */
+    .sg-badge-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .km-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 5px 12px;
+      border-radius: 9999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+    }
+
+    .km-badge svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .km-badge-success { background: var(--km-success-soft); color: var(--km-success-text); }
+    .km-badge-warning { background: var(--km-accent-soft); color: var(--km-accent-text); }
+    .km-badge-danger { background: var(--km-danger-soft); color: var(--km-danger-text); }
+    .km-badge-info { background: var(--km-primary-badge); color: var(--km-primary-dark); }
+
+    .wf-badge-solid { background: var(--wf-ink); color: #FFFFFF; border: 1px solid var(--wf-ink); }
+    .wf-badge-dashed { background: #F8FAFC; color: var(--wf-ink); border: 1px dashed var(--wf-muted); }
+    .wf-badge-outline { background: #FFFFFF; color: var(--wf-ink); border: 1px solid var(--wf-ink); }
+
+    /* Tombol */
+    .sg-btn-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .km-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 40px;
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-family: var(--font-jakarta);
+      font-size: 0.875rem;
+      font-weight: 600;
+      border: 1px solid transparent;
+      white-space: nowrap;
+    }
+
+    .km-btn svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+    }
+
+    .km-btn-sm {
+      min-height: 34px;
+      padding: 5px 11px;
+      font-size: 0.8125rem;
+      border-radius: 6px;
+    }
+
+    .km-btn-sm svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .km-btn-blue { background: var(--km-primary); color: #FFFFFF; }
+    .km-btn-red { background: var(--km-danger); color: #FFFFFF; }
+    .km-btn-red-outline { background: #FFFFFF; color: var(--km-danger); border-color: #FECACA; }
+    .km-btn-green { background: var(--km-success); color: #FFFFFF; }
+    .km-btn-outline { background: #FFFFFF; color: var(--km-text); border-color: var(--km-line); }
+    .km-btn-secondary { background: var(--km-surface-muted); color: var(--km-text); border-color: var(--km-line-soft); }
+    .km-btn-ghost { background: var(--km-primary-soft); color: var(--km-primary-dark); }
+    .wf-btn-dark { background: var(--wf-ink); color: #FFFFFF; }
+
+    /* Grid Dropdown Statis untuk Figma */
+    .sg-dropdown-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: start;
+    }
+
+    @media (min-width: 768px) {
+      .sg-dropdown-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (min-width: 1080px) {
+      .sg-dropdown-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+    }
+
+    .sg-field {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .sg-label {
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--km-text);
+    }
+
+    .sg-select-trigger {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      min-height: 42px;
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 8px;
+      background: #FFFFFF;
+      border: 1px solid var(--km-line);
+      font-family: var(--font-jakarta);
+      font-size: 0.8125rem;
+      font-weight: 600;
+      color: var(--km-text);
+      text-align: left;
+    }
+
+    .sg-select-trigger svg {
+      width: 16px;
+      height: 16px;
+      flex-shrink: 0;
+      color: var(--km-text-muted);
+    }
+
+    .sg-select-open-blue {
+      border-color: var(--km-primary);
+    }
+
+    .sg-select-open-blue svg {
+      color: var(--km-primary);
+      transform: rotate(180deg);
+    }
+
+    .sg-select-open-dark {
+      border-color: var(--wf-ink);
+    }
+
+    .sg-select-open-dark svg {
+      color: var(--wf-ink);
+      transform: rotate(180deg);
+    }
+
+    .sg-select-menu {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid var(--km-line-soft);
+      background: #FFFFFF;
+      padding: 5px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .sg-select-menu-dark {
+      border-color: var(--km-line);
+    }
+
+    .sg-option {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      width: 100%;
+      min-height: 34px;
+      padding: 6px 10px;
+      border-radius: 7px;
+      font-size: 0.8125rem;
+      font-weight: 500;
+      color: var(--km-text-secondary);
+    }
+
+    .sg-option svg {
+      width: 14px;
+      height: 14px;
+      flex-shrink: 0;
+    }
+
+    .sg-option-blue {
+      background: var(--km-primary-soft);
+      color: var(--km-primary-dark);
+      font-weight: 600;
+    }
+
+    .sg-option-blue svg {
+      color: var(--km-primary);
+    }
+
+    .sg-option-gray {
+      background: var(--km-surface-muted);
+      color: var(--wf-ink);
+      font-weight: 700;
+    }
+
+    .sg-option-gray svg {
+      color: var(--wf-ink);
+    }
+
+    /* DatePicker Statis */
+    .sg-calendar {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--km-line-soft);
+      background: #FFFFFF;
+      padding: 14px;
+      box-shadow: 0 6px 18px rgba(15, 23, 42, 0.08);
+    }
+
+    .sg-cal-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-bottom: 10px;
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--km-surface-muted);
+      font-size: 0.875rem;
+      font-weight: 700;
+    }
+
+    .sg-cal-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      border: 1px solid var(--km-line-soft);
+      background: #FFFFFF;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--wf-muted);
+    }
+
+    .sg-cal-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .sg-cal-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 3px;
+      text-align: center;
+    }
+
+    .sg-cal-dow {
+      font-size: 0.6875rem;
+      font-weight: 700;
+      color: var(--km-text-muted);
+      padding: 4px 0;
+    }
+
+    .sg-cal-day {
+      height: 32px;
+      border-radius: 7px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--km-text);
+    }
+
+    .sg-cal-muted { color: #94A3B8; }
+    .sg-cal-today { border: 1px solid var(--km-primary); color: var(--km-primary); background: var(--km-primary-soft); }
+    .sg-cal-active-blue { background: var(--km-primary); color: #FFFFFF; font-weight: 700; }
+    .sg-cal-active-dark { background: var(--wf-ink); color: #FFFFFF; font-weight: 700; }
+
+    .sg-cal-foot {
+      margin-top: 10px;
+      padding-top: 10px;
+      border-top: 1px solid var(--km-surface-muted);
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--wf-muted);
+    }
+
+    /* Bar Paginasi */
+    .sg-pagination {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
+      border: 1px solid var(--km-line-soft);
+      background: #FFFFFF;
+      font-size: 0.8125rem;
+      color: var(--km-text-secondary);
+    }
+
+    .sg-page-item {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 4px;
+      min-height: 32px;
+      min-width: 32px;
+      padding: 4px 10px;
+      border-radius: 6px;
+      border: 1px solid var(--km-line);
+      background: #FFFFFF;
+      font-size: 0.75rem;
+      font-weight: 600;
+      color: var(--km-text);
+    }
+
+    .sg-page-item svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    .sg-page-active-dark {
+      background: var(--wf-ink);
+      border-color: var(--wf-ink);
+      color: #FFFFFF;
+    }
+
+    .sg-page-active-blue {
+      background: var(--km-primary);
+      border-color: var(--km-primary);
+      color: #FFFFFF;
+    }
+
+    /* Prinsip Desain */
+    .sg-principles {
+      margin: 0;
+      padding-left: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      font-size: 0.9375rem;
+      color: var(--km-text-secondary);
+    }
+  </style>
+</head>
+<body>
+  <main class="sg-shell">
+    <!-- BARIS STATUS DI ATAS KARTU (SEPERTI CONTOH GAMBAR) -->
+    <div class="sg-top-badges">
+      <div><span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Stok Aman</span></span></div>
+      <div><span class="km-badge km-badge-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Stok Menipis</span></span></div>
+      <div><span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg><span>Stok Habis</span></span></div>
+      <div><span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Lunas</span></span></div>
+      <div><span class="km-badge km-badge-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Belum Lunas</span></span></div>
+      <div><span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg><span>Gagal</span></span></div>
+      <div><span class="km-badge km-badge-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Menunggu Dikirim</span></span></div>
+      <div><span class="km-badge km-badge-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span>Dalam Perjalanan</span></span></div>
+      <div><span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Selesai</span></span></div>
+      <div><span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Ada Kendala</span></span></div>
+    </div>
+
+    <!-- KARTU UTAMA PANDUAN GAYA -->
+    <div class="sg-card">
+      <h1 class="sg-title">Panduan Gaya - POS CV Kurnia Mandiri</h1>
+
+      <!-- 1. WARNA -->
+      <section class="sg-section">
+        <h2 class="sg-heading">Warna</h2>
+        <div class="sg-color-grid">
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#2563EB;"></div>
+            <div class="sg-color-title">Primer Utama #2563EB</div>
+            <div class="sg-color-use">Tombol utama, menu aktif</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#1D4ED8;"></div>
+            <div class="sg-color-title">Primer Tua #1D4ED8</div>
+            <div class="sg-color-use">Teks tombol, sorotan</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#F59E0B;"></div>
+            <div class="sg-color-title">Aksen Utama #F59E0B</div>
+            <div class="sg-color-use">Peringatan dan perhatian saja</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch sg-swatch-border" style="background:#F8FAFC;"></div>
+            <div class="sg-color-title">Latar Halaman #F8FAFC</div>
+            <div class="sg-color-use">Latar halaman</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch sg-swatch-border" style="background:#FFFFFF;"></div>
+            <div class="sg-color-title">Latar Kartu #FFFFFF</div>
+            <div class="sg-color-use">Kartu dan panel</div>
+          </div>
+
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#1E293B;"></div>
+            <div class="sg-color-title">Teks Utama #1E293B</div>
+            <div class="sg-color-use">Teks utama</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#64748B;"></div>
+            <div class="sg-color-title">Teks Sekunder #64748B</div>
+            <div class="sg-color-use">Keterangan</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#16A34A;"></div>
+            <div class="sg-color-title">Sukses Utama #16A34A</div>
+            <div class="sg-color-use">Berhasil, lunas, aman</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#DC2626;"></div>
+            <div class="sg-color-title">Bahaya Utama #DC2626</div>
+            <div class="sg-color-use">Gagal, habis, hapus</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#CBD5E1;"></div>
+            <div class="sg-color-title">Garis Utama #CBD5E1</div>
+            <div class="sg-color-use">Garis pemisah</div>
+          </div>
+        </div>
+
+        <p class="sg-note">
+          Warna turunan (Muda dan Teks) dipakai pada status agar tulisan tetap mudah dibaca: oranye #F59E0B terlalu terang untuk teks, sehingga teks status Menipis memakai oranye tua #92400E di atas latar oranye muda #FEF3C7.
+        </p>
+
+        <h3 class="sg-subheading">Mode Gelap</h3>
+        <div class="sg-color-grid">
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#0F172A;"></div>
+            <div class="sg-color-title">Latar Halaman #0F172A</div>
+            <div class="sg-color-use">Latar halaman gelap</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#1E293B;"></div>
+            <div class="sg-color-title">Latar Kartu #1E293B</div>
+            <div class="sg-color-use">Kartu dan panel gelap</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch sg-swatch-border" style="background:#F8FAFC;"></div>
+            <div class="sg-color-title">Teks Utama #F8FAFC</div>
+            <div class="sg-color-use">Teks utama gelap</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#94A3B8;"></div>
+            <div class="sg-color-title">Teks Sekunder #94A3B8</div>
+            <div class="sg-color-use">Keterangan gelap</div>
+          </div>
+          <div class="sg-color-item">
+            <div class="sg-swatch" style="background:#334155;"></div>
+            <div class="sg-color-title">Garis Utama #334155</div>
+            <div class="sg-color-use">Garis pemisah gelap</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 2. UKURAN TEKS -->
+      <section class="sg-section">
+        <h2 class="sg-heading">Ukuran Teks (Plus Jakarta Sans)</h2>
+        <div class="sg-type-list">
+          <div style="font-size:2rem;font-weight:700;line-height:1.2;">Judul Halaman - 32</div>
+          <div style="font-size:1.375rem;font-weight:700;line-height:1.3;">Judul Kartu - 22</div>
+          <div style="font-size:2rem;font-weight:700;line-height:1.2;">12.450.000 - 32</div>
+          <div style="font-size:1.125rem;font-weight:700;">Isi dan nama barang - 18 tebal</div>
+          <div style="font-size:1.125rem;font-weight:400;">Isi teks utama - 18</div>
+          <div style="font-size:1rem;font-weight:700;">Label dan status - 16 tebal</div>
+          <div style="font-size:1rem;font-weight:400;color:var(--km-text-muted);">Keterangan pendukung - 16</div>
+          <div style="font-size:0.875rem;font-weight:600;">Label input, header tabel, dan tombol - 14 tebal</div>
+          <div style="font-family:var(--font-mono);font-size:0.8125rem;font-weight:600;">Kode barang &amp; nota (JetBrains Mono) - 13: A001 | INV-20260123-001</div>
+        </div>
+      </section>
+
+      <!-- 3. STATUS -->
+      <section class="sg-section">
+        <h2 class="sg-heading">Status: warna + ikon + tulisan</h2>
+        <div class="sg-badge-list">
+          <span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Stok Aman</span></span>
+          <span class="km-badge km-badge-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Stok Menipis</span></span>
+          <span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg><span>Stok Habis</span></span>
+          <span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Lunas</span></span>
+          <span class="km-badge km-badge-warning"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Belum Lunas</span></span>
+          <span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg><span>Gagal</span></span>
+          <span class="km-badge km-badge-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Menunggu Dikirim</span></span>
+          <span class="km-badge km-badge-info"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span>Dalam Perjalanan</span></span>
+          <span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Selesai</span></span>
+          <span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Ada Kendala</span></span>
+          <span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Disetujui</span></span>
+          <span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg><span>Ditolak</span></span>
+          <span class="km-badge km-badge-success"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Aktif</span></span>
+          <span class="km-badge km-badge-danger"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg><span>Nonaktif</span></span>
+        </div>
+
+        <h3 class="sg-subheading">Status Wireframe (Hitam Putih)</h3>
+        <div class="sg-badge-list">
+          <span class="km-badge wf-badge-solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Stok Aman</span></span>
+          <span class="km-badge wf-badge-dashed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Stok Menipis</span></span>
+          <span class="km-badge wf-badge-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Stok Habis</span></span>
+          <span class="km-badge wf-badge-solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Lunas</span></span>
+          <span class="km-badge wf-badge-dashed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Belum Lunas</span></span>
+          <span class="km-badge wf-badge-dashed"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg><span>Dalam Perjalanan</span></span>
+          <span class="km-badge wf-badge-solid"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg><span>Terkirim</span></span>
+          <span class="km-badge wf-badge-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3"/><path d="M12 9v4"/><path d="M12 17h.01"/></svg><span>Ditolak</span></span>
+        </div>
+      </section>
+
+      <!-- 4. TOMBOL -->
+      <section class="sg-section">
+        <h2 class="sg-heading">Tombol</h2>
+        <div class="sg-btn-list">
+          <button type="button" class="km-btn km-btn-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>Tambah Barang Baru</span></button>
+          <button type="button" class="km-btn km-btn-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>Tambah Pelanggan</span></button>
+          <button type="button" class="km-btn km-btn-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>Tambah Pengguna</span></button>
+          <button type="button" class="km-btn km-btn-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Simpan</span></button>
+          <button type="button" class="km-btn km-btn-blue"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="6 9 6 2 18 2 18 9"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect width="12" height="8" x="6" y="14"/></svg><span>Proses Pembayaran &amp; Cetak Struk</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg><span>Ubah</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span>Detail</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-red"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg><span>Hapus</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-red-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg><span>Hapus</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-green"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Setujui</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-red-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Tolak</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-ghost"><span>Catat Bayar</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M14 18V6a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v11a1 1 0 0 0 1 1h2"/><path d="M15 18H9"/><path d="M19 18h2a1 1 0 0 0 1-1v-3.65a1 1 0 0 0-.22-.624l-3.48-4.35A1 1 0 0 0 17.52 8H14"/><circle cx="17" cy="18" r="2"/><circle cx="7" cy="18" r="2"/></svg><span>Proses Kirim</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 5v14"/><path d="M8 5v14"/><path d="M12 5v14"/><path d="M17 5v14"/><path d="M21 5v14"/></svg><span>Cetak Barcode</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg><span>Unduh CSV</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><span>Batal</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-secondary"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg><span>Kembali</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-red-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg><span>Keluar</span></button>
+        </div>
+
+        <h3 class="sg-subheading">Tombol Wireframe (Hitam Putih)</h3>
+        <div class="sg-btn-list">
+          <button type="button" class="km-btn wf-btn-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>Tambah Barang Baru</span></button>
+          <button type="button" class="km-btn wf-btn-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14"/><path d="M12 5v14"/></svg><span>Tambah</span></button>
+          <button type="button" class="km-btn wf-btn-dark"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>Simpan &amp; Cetak Struk</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg><span>Ubah</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg><span>Detail</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg><span>Hapus</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg><span>Tolak Penukaran</span></button>
+          <div style="display:inline-flex;align-items:center;gap:4px;background:#F8FAFC;padding:3px;border-radius:8px;border:1px solid var(--km-line);">
+            <button type="button" class="sg-page-item" aria-label="Kurangi">-</button>
+            <span style="min-width:30px;text-align:center;font-weight:700;font-size:0.8125rem;">2</span>
+            <button type="button" class="sg-page-item" aria-label="Tambah">+</button>
+          </div>
+          <button type="button" class="km-btn km-btn-sm wf-btn-dark"><span>Tunai</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><span>QRIS</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><span>Virtual Account</span></button>
+          <button type="button" class="km-btn km-btn-sm km-btn-outline"><span>Kasbon</span></button>
+        </div>
+      </section>
+
+      <!-- 5. DROPDOWN SELECT (TERBUKA & TERTUTUP UNTUK FIGMA) -->
+      <section class="sg-section">
+        <h2 class="sg-heading">Dropdown Select</h2>
+
+        <div class="sg-dropdown-grid">
+          <!-- 1. Kategori Barang (Projek Real Biru) -->
+          <div class="sg-field">
+            <label class="sg-label">Kategori Barang (Projek Real)</label>
+            <button type="button" class="sg-select-trigger sg-select-open-blue" aria-expanded="true">
+              <span>Semen &amp; Perekat</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu" role="listbox">
+              <div class="sg-option" role="option"><span>Semua Kategori</span></div>
+              <div class="sg-option sg-option-blue" role="option" aria-selected="true">
+                <span>Semen &amp; Perekat</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Bata &amp; Pasir</span></div>
+              <div class="sg-option" role="option"><span>Besi &amp; Baja</span></div>
+              <div class="sg-option" role="option"><span>Pipa &amp; Sanitasi</span></div>
+              <div class="sg-option" role="option"><span>Cat &amp; Pelapis</span></div>
+              <div class="sg-option" role="option"><span>Atap &amp; Kayu</span></div>
+            </div>
+          </div>
+
+          <!-- 2. Kategori Barang (Wireframe Hitam Putih) -->
+          <div class="sg-field">
+            <label class="sg-label">Kategori Barang (Wireframe)</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Semua Kategori</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Semua Kategori</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Semen &amp; Perekat</span></div>
+              <div class="sg-option" role="option"><span>Bata &amp; Pasir</span></div>
+              <div class="sg-option" role="option"><span>Besi &amp; Baja</span></div>
+              <div class="sg-option" role="option"><span>Pipa &amp; Sanitasi</span></div>
+              <div class="sg-option" role="option"><span>Cat &amp; Pelapis</span></div>
+              <div class="sg-option" role="option"><span>Atap &amp; Kayu</span></div>
+            </div>
+          </div>
+
+          <!-- 3. Satuan Jual Multi-Satuan (Keranjang POS) -->
+          <div class="sg-field">
+            <label class="sg-label">Satuan Jual (Keranjang POS)</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Kubik (Rp 624.000)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Kubik (Rp 624.000)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Pcs (Rp 7.800)</span></div>
+              <div class="sg-option" role="option"><span>Sak (Rp 71.500)</span></div>
+              <div class="sg-option" role="option"><span>Batang (Rp 72.800)</span></div>
+              <div class="sg-option" role="option"><span>Ikat (Rp 3.550.000)</span></div>
+              <div class="sg-option" role="option"><span>Pail 25 Kg (Rp 637.000)</span></div>
+            </div>
+          </div>
+
+          <!-- 4. Pelanggan (Kasir POS) -->
+          <div class="sg-field">
+            <label class="sg-label">Pelanggan</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Pelanggan Umum (Tunai Toko) (Limit: Rp 0)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Pelanggan Umum (Tunai Toko) (Limit: Rp 0)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>CV Bangun Jaya Konstruksi (Limit: Rp 15.000.000)</span></div>
+              <div class="sg-option" role="option"><span>Mandor Rahmat Hidayat (Limit: Rp 5.000.000)</span></div>
+              <div class="sg-option" role="option"><span>PT Griya Karya Mandiri (Limit: Rp 25.000.000)</span></div>
+              <div class="sg-option" role="option"><span>Bapak Sutrisno (Perorangan) (Limit: Rp 0)</span></div>
+            </div>
+          </div>
+
+          <!-- 5. Petugas Pengirim -->
+          <div class="sg-field">
+            <label class="sg-label">Petugas Pengirim</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Hendra Wijaya (Pengirim)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Hendra Wijaya (Pengirim)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Dedi Kurniawan (Pengirim)</span></div>
+            </div>
+          </div>
+
+          <!-- 6. Status Pembayaran -->
+          <div class="sg-field">
+            <label class="sg-label">Status Pembayaran</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Semua Status</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Semua Status</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Lunas</span></div>
+              <div class="sg-option" role="option"><span>Belum Lunas</span></div>
+              <div class="sg-option" role="option"><span>Bayar Sebagian</span></div>
+            </div>
+          </div>
+
+          <!-- 7. Nomor Nota Transaksi Asal -->
+          <div class="sg-field">
+            <label class="sg-label">Nomor Nota Transaksi Asal</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>INV-20260123-001 - CV Bangun Jaya Konstruksi</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>INV-20260123-001 - CV Bangun Jaya Konstruksi</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>INV-20260123-002 - Pelanggan Umum</span></div>
+              <div class="sg-option" role="option"><span>INV-20260122-019 - Mandor Rahmat Hidayat</span></div>
+              <div class="sg-option" role="option"><span>INV-20260121-014 - PT Griya Karya Mandiri</span></div>
+            </div>
+          </div>
+
+          <!-- 8. Kondisi Barang yang Dikembalikan -->
+          <div class="sg-field">
+            <label class="sg-label">Kondisi Barang yang Dikembalikan</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Layak Jual (Menambah Kembali Stok Gudang)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Layak Jual (Menambah Kembali Stok Gudang)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Rusak / Cacat (Tidak Menambah Stok Jual)</span></div>
+            </div>
+          </div>
+
+          <!-- 9. Pilih Barang Pengganti -->
+          <div class="sg-field">
+            <label class="sg-label">Pilih Barang Pengganti</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Hebel Bata Ringan Ukuran 7.5 cm (Stok: 14 Kubik)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Hebel Bata Ringan Ukuran 7.5 cm (Stok: 14 Kubik)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Semen Tiga Roda PCC 50 Kg (Stok: 18 Sak)</span></div>
+              <div class="sg-option" role="option"><span>Besi Beton Polos 10 mm Full SNI (Stok: 12 Batang)</span></div>
+              <div class="sg-option" role="option"><span>Pipa PVC Rucika AW 3 Inch (Stok: 35 Batang)</span></div>
+            </div>
+          </div>
+
+          <!-- 10. Jenis Pelanggan -->
+          <div class="sg-field">
+            <label class="sg-label">Jenis Pelanggan</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Proyek / Kontraktor</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option" role="option"><span>Semua Jenis Pelanggan</span></div>
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Proyek / Kontraktor</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Perorangan / Umum</span></div>
+            </div>
+          </div>
+
+          <!-- 11. Jenis Mutasi Stok -->
+          <div class="sg-field">
+            <label class="sg-label">Jenis Mutasi Stok</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Barang Masuk (Penerimaan Pemasok)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option" role="option"><span>Semua Mutasi</span></div>
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Barang Masuk (Penerimaan Pemasok)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Barang Keluar (Penyesuaian / Rusak)</span></div>
+            </div>
+          </div>
+
+          <!-- 12. Pilih Barang Restok -->
+          <div class="sg-field">
+            <label class="sg-label">Pilih Barang Restok</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>A002 - Semen Tiga Roda PCC 50 Kg (Sisa: 18 Sak)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option" role="option"><span>A001 - Hebel Bata Ringan Ukuran 7.5 cm (Sisa: 14 Kubik)</span></div>
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>A002 - Semen Tiga Roda PCC 50 Kg (Sisa: 18 Sak)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>A004 - Besi Beton Polos 10 mm Full SNI (Sisa: 12 Batang)</span></div>
+              <div class="sg-option" role="option"><span>A006 - Cat Tembok Dulux Catylac 25 Kg (Sisa: 3 Pail)</span></div>
+            </div>
+          </div>
+
+          <!-- 13. Pemasok Tujuan -->
+          <div class="sg-field">
+            <label class="sg-label">Pemasok Tujuan</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>PT Semen Tiga Roda Distribusi</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>PT Semen Tiga Roda Distribusi</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>PT Krakatau Baja Konstruksi</span></div>
+              <div class="sg-option" role="option"><span>CV Pasir Jaya Rangkas</span></div>
+              <div class="sg-option" role="option"><span>PT Rucika Nusantara</span></div>
+              <div class="sg-option" role="option"><span>PT AkzoNobel Dulux Distribusi</span></div>
+            </div>
+          </div>
+
+          <!-- 14. Status Pengiriman -->
+          <div class="sg-field">
+            <label class="sg-label">Status Pengiriman</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Semua Status Pengiriman</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Semua Status Pengiriman</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Menunggu Muat</span></div>
+              <div class="sg-option" role="option"><span>Dalam Perjalanan</span></div>
+              <div class="sg-option" role="option"><span>Terkirim</span></div>
+              <div class="sg-option" role="option"><span>Pengajuan Penukaran</span></div>
+            </div>
+          </div>
+
+          <!-- 15. Hasil Pengiriman di Lokasi -->
+          <div class="sg-field">
+            <label class="sg-label">Hasil Pengiriman di Lokasi</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Terkirim (Diterima Baik oleh Pelanggan)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Terkirim (Diterima Baik oleh Pelanggan)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Pengajuan Penukaran (Barang Rusak / Tidak Sesuai)</span></div>
+            </div>
+          </div>
+
+          <!-- 16. Jenis Kendala Lapangan -->
+          <div class="sg-field">
+            <label class="sg-label">Jenis Kendala Lapangan</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Akses Jalan Sempit / Ditutup</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Akses Jalan Sempit / Ditutup</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Kendaraan Armada Mengalami Gangguan</span></div>
+              <div class="sg-option" role="option"><span>Alamat Tujuan Tidak Ditemukan</span></div>
+              <div class="sg-option" role="option"><span>Penerima Tidak Berada di Lokasi</span></div>
+              <div class="sg-option" role="option"><span>Cuaca Buruk / Hujan Deras</span></div>
+            </div>
+          </div>
+
+          <!-- 17. Peran Pengguna -->
+          <div class="sg-field">
+            <label class="sg-label">Peran Pengguna</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Pemilik / Admin (Akses Penuh)</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Pemilik / Admin (Akses Penuh)</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Pegawai Toko / Kasir (POS &amp; Kasbon)</span></div>
+              <div class="sg-option" role="option"><span>Karyawan Lapangan / Pengirim (Pengiriman)</span></div>
+            </div>
+          </div>
+
+          <!-- 18. Status Akun & Modul Log -->
+          <div class="sg-field">
+            <label class="sg-label">Modul Log Aktivitas</label>
+            <button type="button" class="sg-select-trigger sg-select-open-dark" aria-expanded="true">
+              <span>Semua Modul</span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>Semua Modul</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>Autentikasi</span></div>
+              <div class="sg-option" role="option"><span>Transaksi POS</span></div>
+              <div class="sg-option" role="option"><span>Kasbon &amp; Piutang</span></div>
+              <div class="sg-option" role="option"><span>Penukaran Barang</span></div>
+              <div class="sg-option" role="option"><span>Persediaan &amp; Barang</span></div>
+              <div class="sg-option" role="option"><span>Pengiriman</span></div>
+            </div>
+          </div>
+
+          <!-- 19. Date Picker Kalender -->
+          <div class="sg-field">
+            <label class="sg-label">Pilih Tanggal</label>
+            <button type="button" class="sg-select-trigger sg-select-open-blue" aria-expanded="true">
+              <span style="display:inline-flex;align-items:center;gap:8px;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:15px;height:15px;color:var(--km-primary);transform:none;" aria-hidden="true"><rect width="18" height="18" x="3" y="4" rx="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                <span>23 Jan 2026</span>
+              </span>
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+            </button>
+            <div class="sg-calendar">
+              <div class="sg-cal-head">
+                <button type="button" class="sg-cal-btn" aria-label="Bulan sebelumnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg></button>
+                <span>Januari 2026</span>
+                <button type="button" class="sg-cal-btn" aria-label="Bulan berikutnya"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg></button>
+              </div>
+              <div class="sg-cal-grid">
+                <span class="sg-cal-dow">Sen</span><span class="sg-cal-dow">Sel</span><span class="sg-cal-dow">Rab</span><span class="sg-cal-dow">Kam</span><span class="sg-cal-dow">Jum</span><span class="sg-cal-dow">Sab</span><span class="sg-cal-dow">Min</span>
+                <span class="sg-cal-day sg-cal-muted">29</span><span class="sg-cal-day sg-cal-muted">30</span><span class="sg-cal-day sg-cal-muted">31</span><span class="sg-cal-day">1</span><span class="sg-cal-day">2</span><span class="sg-cal-day">3</span><span class="sg-cal-day">4</span>
+                <span class="sg-cal-day">5</span><span class="sg-cal-day">6</span><span class="sg-cal-day">7</span><span class="sg-cal-day">8</span><span class="sg-cal-day">9</span><span class="sg-cal-day">10</span><span class="sg-cal-day">11</span>
+                <span class="sg-cal-day">12</span><span class="sg-cal-day">13</span><span class="sg-cal-day">14</span><span class="sg-cal-day">15</span><span class="sg-cal-day">16</span><span class="sg-cal-day">17</span><span class="sg-cal-day">18</span>
+                <span class="sg-cal-day">19</span><span class="sg-cal-day">20</span><span class="sg-cal-day">21</span><span class="sg-cal-day sg-cal-today">22</span><span class="sg-cal-day sg-cal-active-blue">23</span><span class="sg-cal-day">24</span><span class="sg-cal-day">25</span>
+                <span class="sg-cal-day">26</span><span class="sg-cal-day">27</span><span class="sg-cal-day">28</span><span class="sg-cal-day">29</span><span class="sg-cal-day">30</span><span class="sg-cal-day">31</span><span class="sg-cal-day sg-cal-muted">1</span>
+              </div>
+              <div class="sg-cal-foot">
+                <span>Awal Tahun</span>
+                <span>Awal Bulan</span>
+                <span style="color:var(--km-primary);font-weight:700;">Hari Ini</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- 20. Dropdown Pengaturan Tampilan Header -->
+          <div class="sg-field">
+            <label class="sg-label">Pengaturan Tampilan (Header)</label>
+            <div class="sg-select-menu sg-select-menu-dark" style="padding:12px;gap:10px;">
+              <div>
+                <div style="font-size:0.6875rem;font-weight:700;color:var(--km-text-muted);margin-bottom:4px;">MODE TAMPILAN</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;">
+                  <button type="button" class="sg-page-item sg-page-active-dark">Terang</button>
+                  <button type="button" class="sg-page-item">Gelap</button>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:0.6875rem;font-weight:700;color:var(--km-text-muted);margin-bottom:4px;">WARNA SIDEBAR</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                  <button type="button" class="sg-page-item sg-page-active-dark">Bawaan</button>
+                  <button type="button" class="sg-page-item">Biru</button>
+                  <button type="button" class="sg-page-item">Gelap</button>
+                </div>
+              </div>
+              <div>
+                <div style="font-size:0.6875rem;font-weight:700;color:var(--km-text-muted);margin-bottom:4px;">UKURAN TEKS</div>
+                <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;">
+                  <button type="button" class="sg-page-item">Kecil</button>
+                  <button type="button" class="sg-page-item sg-page-active-dark">Sedang</button>
+                  <button type="button" class="sg-page-item">Besar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- 21. Dropdown Profil & Sub-Menu Sidebar -->
+          <div class="sg-field">
+            <label class="sg-label">Profil Header &amp; Sub-Menu Sidebar</label>
+            <div class="sg-select-menu sg-select-menu-dark" style="padding:12px;gap:10px;">
+              <div style="display:flex;align-items:center;gap:10px;padding-bottom:8px;border-bottom:1px solid var(--km-line-soft);">
+                <span style="width:34px;height:34px;border-radius:9999px;background:var(--km-surface-muted);border:1px solid var(--km-line);display:inline-flex;align-items:center;justify-content:center;font-weight:700;font-size:0.75rem;">AM</span>
+                <div>
+                  <div style="font-weight:700;font-size:0.8125rem;">Arif Muhamad</div>
+                  <div style="font-size:0.75rem;color:var(--km-text-muted);">Pemilik / Admin (@admin)</div>
+                </div>
+              </div>
+              <button type="button" class="km-btn km-btn-sm km-btn-outline" style="width:100%;">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" x2="9" y1="12" y2="12"/></svg>
+                <span>Keluar</span>
+              </button>
+            </div>
+
+            <div class="sg-select-menu sg-select-menu-dark" style="padding:10px;gap:4px;margin-top:4px;">
+              <div style="display:flex;align-items:center;justify-content:space-between;padding:7px 10px;border-radius:7px;background:var(--km-surface-muted);font-weight:700;font-size:0.8125rem;">
+                <span>Penjualan &amp; POS</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="width:14px;height:14px;" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </div>
+              <div style="margin-left:12px;padding-left:10px;border-left:1px solid var(--km-line);display:flex;flex-direction:column;gap:3px;">
+                <div style="padding:5px 8px;border-radius:6px;background:var(--km-surface-muted);font-weight:700;font-size:0.8125rem;border-left:2px solid var(--wf-ink);">Transaksi Penjualan (POS)</div>
+                <div style="padding:5px 8px;font-size:0.8125rem;color:var(--wf-muted);">Riwayat &amp; Rekap Penjualan</div>
+                <div style="padding:5px 8px;font-size:0.8125rem;color:var(--wf-muted);">Penukaran Barang</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bar Paginasi & Dropdown Baris per Halaman -->
+        <div class="sg-field" style="margin-top:6px;">
+          <label class="sg-label">Paginasi Tabel &amp; Dropdown Baris per Halaman</label>
+          <div style="width:120px;margin-bottom:4px;">
+            <div class="sg-select-menu sg-select-menu-dark" role="listbox">
+              <div class="sg-option sg-option-gray" role="option" aria-selected="true">
+                <span>5 / hal</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+              </div>
+              <div class="sg-option" role="option"><span>10 / hal</span></div>
+              <div class="sg-option" role="option"><span>25 / hal</span></div>
+            </div>
+          </div>
+          <div class="sg-pagination">
+            <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+              <span>Menampilkan <strong>1-5</strong> dari <strong>12</strong> barang</span>
+              <button type="button" class="sg-select-trigger sg-select-open-dark" style="width:100px;min-height:34px;padding:4px 10px;" aria-expanded="true">
+                <span>5 / hal</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;">
+              <button type="button" class="sg-page-item" disabled>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m15 18-6-6 6-6"/></svg>
+                <span>Sebelumnya</span>
+              </button>
+              <button type="button" class="sg-page-item sg-page-active-dark">1</button>
+              <button type="button" class="sg-page-item">2</button>
+              <button type="button" class="sg-page-item">3</button>
+              <button type="button" class="sg-page-item">
+                <span>Berikutnya</span>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="m9 18 6-6-6-6"/></svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 6. PRINSIP DESAIN -->
+      <section class="sg-section">
+        <h2 class="sg-heading">Prinsip Desain</h2>
+        <ol class="sg-principles">
+          <li>Teks minimal 16 px, teks utama 18 px, kontras tinggi.</li>
+          <li>Setiap ikon selalu disertai label tulisan.</li>
+          <li>Status tidak hanya warna: selalu warna + ikon + tulisan.</li>
+          <li>Satu tombol utama berwarna biru per layar; oranye hanya untuk perhatian.</li>
+          <li>Menu sama dan berurutan di setiap layar, isinya sesuai peran (Pemilik, Kasir, Pengirim).</li>
+          <li>Bahasa sehari-hari: Mulai Transaksi Baru, Cetak Struk, Lihat Laporan.</li>
+        </ol>
+      </section>
+    </div>
+  </main>
+</body>
+</html>
