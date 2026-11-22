@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wireframe &amp; Interactive Prototype - Sistem Inventaris &amp; POS TB Kurnia Mandiri</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="css/wireframe.css" />
+</head>
+<body>
+  <div id="wf-app"></div>
+
+  <!-- Modul Data & State Lokal (Frontend-Only, Tanpa Koneksi Supabase) -->
+  <script src="data/mock-data.js"></script>
+  <script src="js/state.js"></script>
+  <script src="js/components.js"></script>
+
+  <!-- Modul Halaman Berdasarkan Analisis Use Case, Activity Diagram, Class Diagram, & ERD -->
+  <script src="js/pages-auth-dashboard.js"></script>
+  <script src="js/pages-master.js"></script>
+  <script src="js/pages-transaksi-kasbon.js"></script>
+  <script src="js/pages-stok-pemasok.js"></script>
+  <script src="js/pages-pengiriman-sistem.js"></script>
+
+  <!-- Controller & Router Prototype -->
+  <script src="js/app.js"></script>
+</body>
+</html>
