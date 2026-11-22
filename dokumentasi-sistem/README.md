@@ -52,7 +52,9 @@ Folder ini (`dokumentasi-sistem/`) berisi dokumentasi teknis arsitektur kode, st
     - Menghapus objek dummy `ROLE_ACCOUNTS` dan fallback statis di `lib/supabase.ts`, menggantinya dengan query langsung ke tabel `pengguna` Supabase (`muatDaftarAkunPeranSupabase` dan `cariAkunAktifPeranSupabase`) beserta sinkronisasi profil sesi otomatis saat memuat halaman.
 
 13. [**13 - Panduan Branch, Pemisahan Commit per Folder, dan Format Pesan Commit**](./13-panduan-branch-dan-commit-git.md)
-    - Mencatat aturan branch (dilarang langsung push ke `main`), pengelompokan commit per folder/modul, dan daftar 10 tipe pesan commit berbahasa Indonesia (`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`) untuk tim.
+    - Mencatat aturan branch, pengelompokan commit/push per folder, pemisahan folder `dokumentasi-sistem/` (proyek utama) dengan `dokumentasi-wireframe/` (wireframe & prototype), serta daftar 10 tipe pesan commit berbahasa Indonesia (`feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `build`, `ci`, `chore`) untuk tim.
+
+> **Catatan Dokumentasi Wireframe**: Seluruh dokumentasi terkait pembuatan dan revisi wireframe serta interactive prototype dipisahkan ke dalam folder tersendiri di [`../dokumentasi-wireframe/`](../dokumentasi-wireframe/README.md).
 
 ## Batasan Logika Bisnis yang Dijaga 100%
 

@@ -8,10 +8,15 @@ Dokumen ini menjadi pegangan tim saat mengirim perubahan ke repositori Git agar 
 2. Buat branch terpisah sesuai nama dan fokus pekerjaan, misalnya `rafly/penyempurnaan-desain` atau `nama/nama-fitur`.
 3. Pastikan build (`npx tsc --noEmit` dan `npx next build`) lolos terlebih dahulu sebelum melakukan push ke remote.
 
-## Aturan Pengelompokan Commit
+## Aturan Pengelompokan Commit & Push
 
-- Kirim (*commit*) perubahan secara bertahap per folder atau per modul agar rekan tim langsung tahu bagian mana yang berubah tanpa menelusuri ratusan file sekaligus.
-- Gunakan bahasa Indonesia yang singkat, jelas, dan langsung menyebut inti perubahan.
+- Lakukan *commit* dan *push* secara bertahap per folder atau per file/modul agar rekan tim mudah membaca bagian mana saja yang berubah.
+- Gunakan Bahasa Indonesia yang singkat, jelas, mudah dipahami rekan tim, serta hindari kalimat bergaya AI yang terlalu panjang.
+
+## Pemisahan Folder Dokumentasi
+
+- **`dokumentasi-sistem/`**: Khusus untuk dokumentasi teknis, arsitektur, dan perubahan pada **proyek aplikasi utama** (Next.js, komponen UI, tema, dan integrasi database).
+- **`dokumentasi-wireframe/`**: Khusus untuk dokumentasi pembuatan dan revisi **wireframe, interactive prototype, serta panduan gaya Figma** yang berada di folder `wireframe/`. Jangan mencampur dokumentasi wireframe ke dalam `dokumentasi-sistem/`.
 
 ## Jenis Tipe Pesan Commit
 
