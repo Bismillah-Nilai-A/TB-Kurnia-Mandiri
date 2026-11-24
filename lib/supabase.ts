@@ -98,16 +98,16 @@ export async function getCurrentUser(): Promise<POSUser | null> {
   try {
     const { data: adminRow } = await supabase
       .from("pengguna")
-      .select("id, nama, username, role, status")
+      .select("id_pengguna, nama, username, role, status")
       .eq("role", "admin")
       .eq("status", "aktif")
-      .order("id", { ascending: true })
+      .order("id_pengguna", { ascending: true })
       .limit(1)
       .maybeSingle();
 
     if (adminRow) {
       const dbUser: POSUser = {
-        id: String(adminRow.id),
+        id: String(adminRow.id_pengguna),
         nama: String(adminRow.nama),
         username: String(adminRow.username),
         email: usernameToSyntheticEmail(String(adminRow.username)),
@@ -155,8 +155,8 @@ export async function logAktivitas({
     }
     await supabase.from("log_aktivitas").insert({
       pengguna_id: uid,
-      modul,
-      aktivitas,
+      modul: modul.slice(0, 30),
+      aktivitas: aktivitas.slice(0, 50),
       data_sebelum: dataSebelum,
       data_sesudah: dataSesudah,
       waktu: new Date().toISOString(),

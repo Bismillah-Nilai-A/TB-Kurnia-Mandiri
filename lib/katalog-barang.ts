@@ -2,14 +2,20 @@ export interface BarangCatalogItem {
   id?: string;
   kode_barang: string;
   nama: string;
-  merk: string;
+  merk?: string;
   kategori: string;
   barcode: string | null;
+  barcode_fisik?: boolean;
+  satuan_dasar?: string;
+  satuan_pembelian?: string;
+  isi_per_satuan_beli?: number;
   harga_beli: number;
+  harga_modal?: number;
   harga: number;
-  stok_awal: number;
+  stok_awal?: number;
   stok: number;
   stok_min: number;
+  stok_minimum?: number;
   satuan: string;
   keterangan?: string | null;
 }

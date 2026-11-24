@@ -1,4 +1,5 @@
-// Database types untuk Supabase (PostgreSQL) - CV Kurnia Mandiri (Updated v1.4 - Class Diagram Sync)
+// Database types untuk Supabase (PostgreSQL) - CV Kurnia Mandiri
+// Sinkron penuh dengan Revisi_CV_Kurnia_mandiri.drawio (Class Diagram, Use Case, Activity Diagram To-Be)
 
 export type Json =
   | string
@@ -8,15 +9,23 @@ export type Json =
   | { [key: string]: Json }
   | Json[];
 
-export type Role = "admin" | "kasir" | "pengelola" | "pengirim" | "pelanggan";
+export type Role = "admin" | "kasir" | "pengirim";
 export type StatusAkun = "aktif" | "nonaktif";
 export type JenisPelanggan = "proyek" | "perorangan";
 export type StatusKasbon = "aktif" | "menunggu" | "disetujui" | "ditolak" | "lunas" | "dibatalkan";
-export type StatusBarang = "aktif" | "rusak" | "habis" | "diusulkan";
 export type JenisPembayaran = "tunai" | "kasbon" | "qris" | "va" | "transfer";
 export type StatusBayar = "lunas" | "menunggu" | "sebagian" | "dibatalkan";
-export type StatusPengiriman = "belum_dikirim" | "sedang_dikirim" | "dikirim" | "diterima" | "gagal" | "ditugaskan" | "terkirim" | "retur";
+export type StatusPengiriman =
+  | "belum_dikirim"
+  | "sedang_dikirim"
+  | "pengajuan_penukaran"
+  | "diterima"
+  | "terkirim"
+  | "gagal";
 export type StatusRestok = "direncanakan" | "dipesan" | "selesai" | "batal";
+export type StatusTagihanPemasok = "belum_lunas" | "sebagian" | "lunas";
+export type StatusPenukaran = "menunggu" | "disetujui" | "ditolak" | "selesai";
+export type KondisiBarangKembali = "layak_jual" | "rusak";
 export type JenisKendalaPengiriman =
   | "barang_tidak_lengkap"
   | "alamat_tidak_ditemukan"
@@ -99,7 +108,8 @@ export type Database = {
     Tables: {
       pengguna: {
         Row: {
-          id: string;
+          id_pengguna: string;
+          id?: string;
           nama: string;
           username: string;
           password: string;
@@ -108,7 +118,7 @@ export type Database = {
           created_at: string;
         };
         Insert: {
-          id?: string;
+          id_pengguna?: string;
           nama: string;
           username: string;
           password: string;
@@ -117,7 +127,7 @@ export type Database = {
           created_at?: string;
         };
         Update: {
-          id?: string;
+          id_pengguna?: string;
           nama?: string;
           username?: string;
           password?: string;
@@ -128,7 +138,8 @@ export type Database = {
       };
       log_aktivitas: {
         Row: {
-          id: string;
+          id_log: string;
+          id?: string;
           pengguna_id: string | null;
           modul: string;
           aktivitas: string;
@@ -137,7 +148,7 @@ export type Database = {
           waktu: string;
         };
         Insert: {
-          id?: string;
+          id_log?: string;
           pengguna_id?: string | null;
           modul: string;
           aktivitas: string;
@@ -146,7 +157,7 @@ export type Database = {
           waktu?: string;
         };
         Update: {
-          id?: string;
+          id_log?: string;
           pengguna_id?: string | null;
           modul?: string;
           aktivitas?: string;
@@ -155,9 +166,40 @@ export type Database = {
           waktu?: string;
         };
       };
+      notifikasi: {
+        Row: {
+          id_notifikasi: string;
+          id?: string;
+          jenis: string;
+          penerima: string;
+          saluran: NotificationChannel;
+          pesan: string;
+          status_kirim: "pending" | "terkirim" | "gagal" | "antri";
+          waktu: string;
+        };
+        Insert: {
+          id_notifikasi?: string;
+          jenis: string;
+          penerima: string;
+          saluran?: NotificationChannel;
+          pesan: string;
+          status_kirim?: "pending" | "terkirim" | "gagal" | "antri";
+          waktu?: string;
+        };
+        Update: {
+          id_notifikasi?: string;
+          jenis?: string;
+          penerima?: string;
+          saluran?: NotificationChannel;
+          pesan?: string;
+          status_kirim?: "pending" | "terkirim" | "gagal" | "antri";
+          waktu?: string;
+        };
+      };
       pelanggan: {
         Row: {
-          id: string;
+          id_pelanggan: string;
+          id?: string;
           nama: string;
           jenis: JenisPelanggan;
           kontak: string | null;
@@ -167,7 +209,7 @@ export type Database = {
           created_at: string;
         };
         Insert: {
-          id?: string;
+          id_pelanggan?: string;
           nama: string;
           jenis?: JenisPelanggan;
           kontak?: string | null;
@@ -177,7 +219,7 @@ export type Database = {
           created_at?: string;
         };
         Update: {
-          id?: string;
+          id_pelanggan?: string;
           nama?: string;
           jenis?: JenisPelanggan;
           kontak?: string | null;
@@ -187,155 +229,43 @@ export type Database = {
           created_at?: string;
         };
       };
-      barang: {
+      kasbon: {
         Row: {
-          id: string;
-          kode_barang: string;
-          nama: string;
-          kategori: string;
-          merk: string | null;
-          barcode: string | null;
-          harga_beli: number;
-          harga: number;
-          stok_awal: number;
-          stok: number;
-          stok_min: number;
-          stok_minimum: number;
-          satuan: string;
-          keterangan: string | null;
-          created_at: string;
+          id_kasbon: string;
+          id?: string;
+          pelanggan_id: string;
+          transaksi_id: string | null;
+          jumlah_kasbon: number;
+          status: StatusKasbon;
+          alasan_penolakan: string | null;
+          tanggal_pengajuan: string;
+          tanggal_keputusan: string | null;
         };
         Insert: {
-          id?: string;
-          kode_barang: string;
-          nama: string;
-          kategori: string;
-          merk?: string | null;
-          barcode?: string | null;
-          harga_beli?: number;
-          harga?: number;
-          stok_awal?: number;
-          stok?: number;
-          stok_min?: number;
-          stok_minimum?: number;
-          satuan?: string;
-          keterangan?: string | null;
-          created_at?: string;
+          id_kasbon?: string;
+          pelanggan_id: string;
+          transaksi_id?: string | null;
+          jumlah_kasbon: number;
+          status?: StatusKasbon;
+          alasan_penolakan?: string | null;
+          tanggal_pengajuan?: string;
+          tanggal_keputusan?: string | null;
         };
         Update: {
-          id?: string;
-          kode_barang?: string;
-          nama?: string;
-          kategori?: string;
-          merk?: string | null;
-          barcode?: string | null;
-          harga_beli?: number;
-          harga?: number;
-          stok_awal?: number;
-          stok?: number;
-          stok_min?: number;
-          stok_minimum?: number;
-          satuan?: string;
-          keterangan?: string | null;
-          created_at?: string;
-        };
-      };
-      stok: {
-        Row: {
-          id: string;
-          barang_id: string;
-          stok_awal: number;
-          stok_akhir: number;
-          tipe: "masuk" | "keluar" | "penyesuaian";
-          tanggal: string;
-        };
-        Insert: {
-          id?: string;
-          barang_id: string;
-          stok_awal: number;
-          stok_akhir: number;
-          tipe: "masuk" | "keluar" | "penyesuaian";
-          tanggal?: string;
-        };
-        Update: {
-          id?: string;
-          barang_id?: string;
-          stok_awal?: number;
-          stok_akhir?: number;
-          tipe?: "masuk" | "keluar" | "penyesuaian";
-          tanggal?: string;
-        };
-      };
-      mutasi_barang: {
-        Row: {
-          id: string;
-          pengguna_id: string | null;
-          jenis: "masuk" | "keluar" | "retur";
-          supplier: string | null;
-          no_referensi: string | null;
-          tujuan: string | null;
-          alasan: string | null;
-          tanggal: string;
-        };
-        Insert: {
-          id?: string;
-          pengguna_id?: string | null;
-          jenis: "masuk" | "keluar" | "retur";
-          supplier?: string | null;
-          no_referensi?: string | null;
-          tujuan?: string | null;
-          alasan?: string | null;
-          tanggal?: string;
-        };
-        Update: {
-          id?: string;
-          pengguna_id?: string | null;
-          jenis?: "masuk" | "keluar" | "retur";
-          supplier?: string | null;
-          no_referensi?: string | null;
-          tujuan?: string | null;
-          alasan?: string | null;
-          tanggal?: string;
-        };
-      };
-      detail_mutasi_barang: {
-        Row: {
-          id: string;
-          mutasi_id: string;
-          barang_id: string;
-          jumlah: number;
-          stok_sebelum: number;
-          stok_sesudah: number;
-          harga_satuan: number;
-          total_harga: number;
-          keterangan: string | null;
-        };
-        Insert: {
-          id?: string;
-          mutasi_id: string;
-          barang_id: string;
-          jumlah: number;
-          stok_sebelum?: number;
-          stok_sesudah?: number;
-          harga_satuan?: number;
-          total_harga?: number;
-          keterangan?: string | null;
-        };
-        Update: {
-          id?: string;
-          mutasi_id?: string;
-          barang_id?: string;
-          jumlah?: number;
-          stok_sebelum?: number;
-          stok_sesudah?: number;
-          harga_satuan?: number;
-          total_harga?: number;
-          keterangan?: string | null;
+          id_kasbon?: string;
+          pelanggan_id?: string;
+          transaksi_id?: string | null;
+          jumlah_kasbon?: number;
+          status?: StatusKasbon;
+          alasan_penolakan?: string | null;
+          tanggal_pengajuan?: string;
+          tanggal_keputusan?: string | null;
         };
       };
       transaksi: {
         Row: {
-          id: string;
+          id_transaksi: string;
+          id?: string;
           no_nota: string;
           pengguna_id: string | null;
           pelanggan_id: string | null;
@@ -348,7 +278,7 @@ export type Database = {
           tanggal: string;
         };
         Insert: {
-          id?: string;
+          id_transaksi?: string;
           no_nota: string;
           pengguna_id?: string | null;
           pelanggan_id?: string | null;
@@ -361,7 +291,7 @@ export type Database = {
           tanggal?: string;
         };
         Update: {
-          id?: string;
+          id_transaksi?: string;
           no_nota?: string;
           pengguna_id?: string | null;
           pelanggan_id?: string | null;
@@ -376,34 +306,32 @@ export type Database = {
       };
       detail_transaksi: {
         Row: {
-          id: string;
+          id_detail_transaksi: string;
+          id?: string;
           transaksi_id: string;
-          barang_id: string;
+          satuan_barang_id: string;
           jumlah: number;
-          harga_modal: number;
-          harga_asli: number;
+          harga_awal: number;
           harga_nego: number | null;
           harga_satuan: number;
           subtotal: number;
         };
         Insert: {
-          id?: string;
+          id_detail_transaksi?: string;
           transaksi_id: string;
-          barang_id: string;
+          satuan_barang_id: string;
           jumlah: number;
-          harga_modal?: number;
-          harga_asli?: number;
+          harga_awal: number;
           harga_nego?: number | null;
           harga_satuan: number;
-          subtotal?: number;
+          subtotal: number;
         };
         Update: {
-          id?: string;
+          id_detail_transaksi?: string;
           transaksi_id?: string;
-          barang_id?: string;
+          satuan_barang_id?: string;
           jumlah?: number;
-          harga_modal?: number;
-          harga_asli?: number;
+          harga_awal?: number;
           harga_nego?: number | null;
           harga_satuan?: number;
           subtotal?: number;
@@ -411,7 +339,8 @@ export type Database = {
       };
       pembayaran: {
         Row: {
-          id: string;
+          id_pembayaran: string;
+          id?: string;
           transaksi_id: string;
           metode: JenisPembayaran;
           nominal: number;
@@ -421,7 +350,7 @@ export type Database = {
           tanggal: string;
         };
         Insert: {
-          id?: string;
+          id_pembayaran?: string;
           transaksi_id: string;
           metode: JenisPembayaran;
           nominal: number;
@@ -431,7 +360,7 @@ export type Database = {
           tanggal?: string;
         };
         Update: {
-          id?: string;
+          id_pembayaran?: string;
           transaksi_id?: string;
           metode?: JenisPembayaran;
           nominal?: number;
@@ -441,202 +370,388 @@ export type Database = {
           tanggal?: string;
         };
       };
-      kasbon: {
+      barang: {
         Row: {
-          id: string;
-          pelanggan_id: string;
-          transaksi_id: string | null;
-          jumlah_kasbon: number;
-          status: StatusKasbon;
-          alasan_penolakan: string | null;
-          tanggal_pengajuan: string;
-          tanggal_keputusan: string | null;
+          id_barang: string;
+          id?: string;
+          kode_barang: string;
+          nama: string;
+          kategori: string;
+          barcode: string | null;
+          barcode_fisik: boolean;
+          satuan_dasar: string;
+          stok: number;
+          stok_minimum: number;
+          satuan_pembelian: string;
+          isi_per_satuan_beli: number;
+          harga_beli: number;
+          harga_modal: number;
+          created_at: string;
         };
         Insert: {
-          id?: string;
-          pelanggan_id: string;
-          transaksi_id?: string | null;
-          jumlah_kasbon: number;
-          status?: StatusKasbon;
-          alasan_penolakan?: string | null;
-          tanggal_pengajuan?: string;
-          tanggal_keputusan?: string | null;
+          id_barang?: string;
+          kode_barang: string;
+          nama: string;
+          kategori: string;
+          barcode?: string | null;
+          barcode_fisik?: boolean;
+          satuan_dasar?: string;
+          stok?: number;
+          stok_minimum?: number;
+          satuan_pembelian?: string;
+          isi_per_satuan_beli?: number;
+          harga_beli?: number;
+          harga_modal?: number;
+          created_at?: string;
         };
         Update: {
+          id_barang?: string;
+          kode_barang?: string;
+          nama?: string;
+          kategori?: string;
+          barcode?: string | null;
+          barcode_fisik?: boolean;
+          satuan_dasar?: string;
+          stok?: number;
+          stok_minimum?: number;
+          satuan_pembelian?: string;
+          isi_per_satuan_beli?: number;
+          harga_beli?: number;
+          harga_modal?: number;
+          created_at?: string;
+        };
+      };
+      satuan_barang: {
+        Row: {
+          id_satuan_barang: string;
           id?: string;
-          pelanggan_id?: string;
-          transaksi_id?: string | null;
-          jumlah_kasbon?: number;
-          status?: StatusKasbon;
-          alasan_penolakan?: string | null;
-          tanggal_pengajuan?: string;
-          tanggal_keputusan?: string | null;
+          barang_id: string;
+          nama_satuan: string;
+          jumlah_konversi: number;
+          harga_modal: number;
+          margin_persen: number;
+          harga_jual_awal: number;
+        };
+        Insert: {
+          id_satuan_barang?: string;
+          barang_id: string;
+          nama_satuan: string;
+          jumlah_konversi?: number;
+          harga_modal?: number;
+          margin_persen?: number;
+          harga_jual_awal?: number;
+        };
+        Update: {
+          id_satuan_barang?: string;
+          barang_id?: string;
+          nama_satuan?: string;
+          jumlah_konversi?: number;
+          harga_modal?: number;
+          margin_persen?: number;
+          harga_jual_awal?: number;
         };
       };
       rencana_restok: {
         Row: {
-          id: string;
+          id_restok: string;
+          id?: string;
           barang_id: string;
           jumlah_restok: number;
-          restok: number;
           status: StatusRestok | string;
-          target: string | null;
           tanggal: string;
         };
         Insert: {
-          id?: string;
+          id_restok?: string;
           barang_id: string;
-          jumlah_restok?: number;
-          restok?: number;
+          jumlah_restok: number;
           status?: StatusRestok | string;
-          target?: string | null;
           tanggal?: string;
         };
         Update: {
-          id?: string;
+          id_restok?: string;
           barang_id?: string;
           jumlah_restok?: number;
-          restok?: number;
           status?: StatusRestok | string;
-          target?: string | null;
           tanggal?: string;
+        };
+      };
+      pemasok: {
+        Row: {
+          id_pemasok: string;
+          id?: string;
+          nama: string;
+          kontak: string | null;
+          alamat: string | null;
+          created_at: string;
+        };
+        Insert: {
+          id_pemasok?: string;
+          nama: string;
+          kontak?: string | null;
+          alamat?: string | null;
+          created_at?: string;
+        };
+        Update: {
+          id_pemasok?: string;
+          nama?: string;
+          kontak?: string | null;
+          alamat?: string | null;
+          created_at?: string;
+        };
+      };
+      mutasi_barang: {
+        Row: {
+          id_mutasi: string;
+          id?: string;
+          pengguna_id: string | null;
+          pemasok_id: string | null;
+          jenis: "masuk" | "keluar";
+          no_surat_jalan: string | null;
+          jenis_bayar: "tunai" | "tempo" | null;
+          tujuan: string | null;
+          alasan: string | null;
+          tanggal: string;
+        };
+        Insert: {
+          id_mutasi?: string;
+          pengguna_id?: string | null;
+          pemasok_id?: string | null;
+          jenis: "masuk" | "keluar";
+          no_surat_jalan?: string | null;
+          jenis_bayar?: "tunai" | "tempo" | null;
+          tujuan?: string | null;
+          alasan?: string | null;
+          tanggal?: string;
+        };
+        Update: {
+          id_mutasi?: string;
+          pengguna_id?: string | null;
+          pemasok_id?: string | null;
+          jenis?: "masuk" | "keluar";
+          no_surat_jalan?: string | null;
+          jenis_bayar?: "tunai" | "tempo" | null;
+          tujuan?: string | null;
+          alasan?: string | null;
+          tanggal?: string;
+        };
+      };
+      detail_mutasi_barang: {
+        Row: {
+          id_detail_mutasi: string;
+          id?: string;
+          mutasi_id: string;
+          barang_id: string;
+          satuan_pembelian: string;
+          jumlah: number;
+          harga_beli: number;
+          subtotal: number;
+          stok_sebelum: number;
+          stok_sesudah: number;
+        };
+        Insert: {
+          id_detail_mutasi?: string;
+          mutasi_id: string;
+          barang_id: string;
+          satuan_pembelian: string;
+          jumlah: number;
+          harga_beli?: number;
+          subtotal?: number;
+          stok_sebelum?: number;
+          stok_sesudah?: number;
+        };
+        Update: {
+          id_detail_mutasi?: string;
+          mutasi_id?: string;
+          barang_id?: string;
+          satuan_pembelian?: string;
+          jumlah?: number;
+          harga_beli?: number;
+          subtotal?: number;
+          stok_sebelum?: number;
+          stok_sesudah?: number;
+        };
+      };
+      tagihan_pemasok: {
+        Row: {
+          id_tagihan: string;
+          id?: string;
+          pemasok_id: string;
+          mutasi_id: string | null;
+          jumlah_tagihan: number;
+          sisa_tagihan: number;
+          tanggal_jatuh_tempo: string;
+          status: StatusTagihanPemasok | string;
+          created_at: string;
+        };
+        Insert: {
+          id_tagihan?: string;
+          pemasok_id: string;
+          mutasi_id?: string | null;
+          jumlah_tagihan: number;
+          sisa_tagihan: number;
+          tanggal_jatuh_tempo: string;
+          status?: StatusTagihanPemasok | string;
+          created_at?: string;
+        };
+        Update: {
+          id_tagihan?: string;
+          pemasok_id?: string;
+          mutasi_id?: string | null;
+          jumlah_tagihan?: number;
+          sisa_tagihan?: number;
+          tanggal_jatuh_tempo?: string;
+          status?: StatusTagihanPemasok | string;
+          created_at?: string;
+        };
+      };
+      pembayaran_pemasok: {
+        Row: {
+          id_pembayaran_pemasok: string;
+          id?: string;
+          tagihan_id: string;
+          nominal: number;
+          tanggal_bayar: string;
+          keterangan: string | null;
+        };
+        Insert: {
+          id_pembayaran_pemasok?: string;
+          tagihan_id: string;
+          nominal: number;
+          tanggal_bayar?: string;
+          keterangan?: string | null;
+        };
+        Update: {
+          id_pembayaran_pemasok?: string;
+          tagihan_id?: string;
+          nominal?: number;
+          tanggal_bayar?: string;
+          keterangan?: string | null;
         };
       };
       pengiriman: {
         Row: {
-          id: string;
+          id_pengiriman: string;
+          id?: string;
           transaksi_id: string | null;
           pengirim_id: string | null;
-          detail_penerima: string | null;
-          nama_penerima_aktual: string | null;
           alamat_tujuan: string;
           status: StatusPengiriman;
           foto_bukti_url: string | null;
-          foto_bukti_nama: string | null;
-          foto_bukti_mime: string | null;
-          alasan_retur: string | null;
+          alasan_penukaran: string | null;
           tanggal_penugasan: string;
           tanggal_terima: string | null;
         };
         Insert: {
-          id?: string;
+          id_pengiriman?: string;
           transaksi_id?: string | null;
           pengirim_id?: string | null;
-          detail_penerima?: string | null;
-          nama_penerima_aktual?: string | null;
           alamat_tujuan: string;
           status?: StatusPengiriman;
           foto_bukti_url?: string | null;
-          foto_bukti_nama?: string | null;
-          foto_bukti_mime?: string | null;
-          alasan_retur?: string | null;
+          alasan_penukaran?: string | null;
           tanggal_penugasan?: string;
           tanggal_terima?: string | null;
         };
         Update: {
-          id?: string;
+          id_pengiriman?: string;
           transaksi_id?: string | null;
           pengirim_id?: string | null;
-          detail_penerima?: string | null;
-          nama_penerima_aktual?: string | null;
           alamat_tujuan?: string;
           status?: StatusPengiriman;
           foto_bukti_url?: string | null;
-          foto_bukti_nama?: string | null;
-          foto_bukti_mime?: string | null;
-          alasan_retur?: string | null;
+          alasan_penukaran?: string | null;
           tanggal_penugasan?: string;
           tanggal_terima?: string | null;
         };
       };
       laporan_kendala: {
         Row: {
-          id: string;
+          id_laporan: string;
+          id?: string;
           pengiriman_id: string;
           jenis_kendala: JenisKendalaPengiriman | string;
           deskripsi: string;
           created_at: string;
         };
         Insert: {
-          id?: string;
+          id_laporan?: string;
           pengiriman_id: string;
           jenis_kendala: JenisKendalaPengiriman | string;
           deskripsi: string;
           created_at?: string;
         };
         Update: {
-          id?: string;
+          id_laporan?: string;
           pengiriman_id?: string;
           jenis_kendala?: JenisKendalaPengiriman | string;
           deskripsi?: string;
           created_at?: string;
         };
       };
-      notifikasi: {
+      penukaran: {
         Row: {
-          id: string;
-          jenis: string;
-          penerima: string;
-          saluran: NotificationChannel;
-          pesan: string;
-          status_kirim: "pending" | "terkirim" | "gagal" | "antri";
-          waktu: string;
+          id_penukaran: string;
+          id?: string;
+          transaksi_id: string;
+          status: StatusPenukaran | string;
+          alasan_penukaran: string | null;
+          alasan_penolakan: string | null;
+          selisih_harga: number;
+          tanggal_pengajuan: string;
+          tanggal_selesai: string | null;
         };
         Insert: {
-          id?: string;
-          jenis: string;
-          penerima: string;
-          saluran?: NotificationChannel;
-          pesan: string;
-          status_kirim?: "pending" | "terkirim" | "gagal" | "antri";
-          waktu?: string;
+          id_penukaran?: string;
+          transaksi_id: string;
+          status?: StatusPenukaran | string;
+          alasan_penukaran?: string | null;
+          alasan_penolakan?: string | null;
+          selisih_harga?: number;
+          tanggal_pengajuan?: string;
+          tanggal_selesai?: string | null;
         };
         Update: {
-          id?: string;
-          jenis?: string;
-          penerima?: string;
-          saluran?: NotificationChannel;
-          pesan?: string;
-          status_kirim?: "pending" | "terkirim" | "gagal" | "antri";
-          waktu?: string;
+          id_penukaran?: string;
+          transaksi_id?: string;
+          status?: StatusPenukaran | string;
+          alasan_penukaran?: string | null;
+          alasan_penolakan?: string | null;
+          selisih_harga?: number;
+          tanggal_pengajuan?: string;
+          tanggal_selesai?: string | null;
         };
       };
-      pengaturan_sistem: {
+      detail_penukaran: {
         Row: {
-          id: number;
-          saluran_notifikasi: NotificationChannel | string;
-          penerima_notifikasi: string;
-          penyedia_gateway: string;
-          kunci_api: string | null;
-          updated_at: string;
-          notifikasi: boolean;
-          notifikasi_detail: string | null;
-          gateway: string;
-          gateway_detail: string | null;
+          id_detail_penukaran: string;
+          id?: string;
+          penukaran_id: string;
+          satuan_asal_id: string;
+          satuan_pengganti_id: string;
+          jumlah_kembali: number;
+          kondisi_barang: KondisiBarangKembali | string;
+          jumlah_pengganti: number;
+          harga_pengganti: number;
         };
         Insert: {
-          id?: number;
-          saluran_notifikasi?: NotificationChannel | string;
-          penerima_notifikasi?: string;
-          penyedia_gateway?: string;
-          kunci_api?: string | null;
-          updated_at?: string;
-          notifikasi?: boolean;
-          notifikasi_detail?: string | null;
-          gateway?: string;
-          gateway_detail?: string | null;
+          id_detail_penukaran?: string;
+          penukaran_id: string;
+          satuan_asal_id: string;
+          satuan_pengganti_id: string;
+          jumlah_kembali: number;
+          kondisi_barang?: KondisiBarangKembali | string;
+          jumlah_pengganti: number;
+          harga_pengganti: number;
         };
         Update: {
-          id?: number;
-          saluran_notifikasi?: NotificationChannel | string;
-          penerima_notifikasi?: string;
-          penyedia_gateway?: string;
-          kunci_api?: string | null;
-          updated_at?: string;
-          notifikasi?: boolean;
-          notifikasi_detail?: string | null;
-          gateway?: string;
-          gateway_detail?: string | null;
+          id_detail_penukaran?: string;
+          penukaran_id?: string;
+          satuan_asal_id?: string;
+          satuan_pengganti_id?: string;
+          jumlah_kembali?: number;
+          kondisi_barang?: KondisiBarangKembali | string;
+          jumlah_pengganti?: number;
+          harga_pengganti?: number;
         };
       };
     };
