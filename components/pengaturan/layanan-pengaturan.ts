@@ -12,6 +12,7 @@ export type NotifikasiRow = NotifRow;
 
 export interface LogRow {
   id: string;
+  id_log?: string;
   pengguna_id: string | null;
   modul: string;
   aktivitas: string;
@@ -24,17 +25,41 @@ export type LogJoined = LogRow;
 
 export type TabPengaturan = "sistem" | "pengguna" | "log" | "notifikasi";
 
+export interface LocalSystemConfig {
+  id: number;
+  notifikasi: boolean;
+  saluran_notifikasi: "email" | "whatsapp";
+  penerima_notifikasi: string;
+  notifikasi_detail: string;
+  penyedia_gateway: string;
+  kunci_api: string;
+  gateway: string;
+  gateway_detail: string;
+  updated_at: string;
+}
+
+const SYSTEM_SETTINGS_STORAGE_KEY = "cvkm_pos_system_config_v1";
+
+export const DEFAULT_SYSTEM_CONFIG: LocalSystemConfig = {
+  id: 1,
+  notifikasi: true,
+  saluran_notifikasi: "email",
+  penerima_notifikasi: "muhamadirfan.mi966@gmail.com",
+  notifikasi_detail: "Email Resend (onboarding@resend.dev) + Outbox pg_cron",
+  penyedia_gateway: "midtrans",
+  kunci_api: "SB-Mid-server-****-7O5s",
+  gateway: "Midtrans Snap Sandbox",
+  gateway_detail:
+    "QRIS & Virtual Account (Server Key: ****-7O5s | Client Key: ****-M41f)",
+  updated_at: new Date().toISOString(),
+};
+
 export const DEFAULT_USERS: UserRow[] = [];
 export const DEFAULT_LOGS: LogRow[] = [];
 export const DEFAULT_NOTIFS: NotifRow[] = [];
 
 export async function muatSemuaPengaturan() {
-  const [setRes, usrRes, logRes, ntfRes] = await Promise.all([
-    supabase
-      .from("pengaturan_sistem")
-      .select("*")
-      .eq("id", 1)
-      .maybeSingle(),
+  const [usrRes, logRes, ntfRes] = await Promise.all([
     supabase
       .from("pengguna")
       .select("*")
@@ -51,11 +76,41 @@ export async function muatSemuaPengaturan() {
       .limit(50),
   ]);
 
+  let settings: LocalSystemConfig = DEFAULT_SYSTEM_CONFIG;
+  if (typeof window !== "undefined") {
+    try {
+      const saved = window.localStorage.getItem(SYSTEM_SETTINGS_STORAGE_KEY);
+      if (saved) {
+        settings = { ...DEFAULT_SYSTEM_CONFIG, ...JSON.parse(saved) };
+      }
+    } catch {
+      // Gunakan default
+    }
+  }
+
+  const users: UserRow[] = ((usrRes.data || []) as Array<Record<string, unknown>>).map((u) => ({
+    ...(u as unknown as UserRow),
+    id_pengguna: String(u.id_pengguna || u.id),
+    id: String(u.id_pengguna || u.id),
+  }));
+
+  const logs: LogRow[] = ((logRes.data || []) as Array<Record<string, unknown>>).map((l) => ({
+    ...(l as unknown as LogRow),
+    id_log: String(l.id_log || l.id),
+    id: String(l.id_log || l.id),
+  }));
+
+  const notifs: NotifRow[] = ((ntfRes.data || []) as Array<Record<string, unknown>>).map((n) => ({
+    ...(n as unknown as NotifRow),
+    id_notifikasi: String(n.id_notifikasi || n.id),
+    id: String(n.id_notifikasi || n.id),
+  }));
+
   return {
-    settings: setRes.data || null,
-    users: (usrRes.data as UserRow[]) || DEFAULT_USERS,
-    logs: (logRes.data as unknown as LogRow[]) || DEFAULT_LOGS,
-    notifs: (ntfRes.data as NotifRow[]) || DEFAULT_NOTIFS,
+    settings,
+    users,
+    logs,
+    notifs,
   };
 }
 
@@ -69,7 +124,7 @@ export async function simpanPengaturanSistemSupabase(params: {
   gatewayName: string;
   gatewayDetail: string;
 }) {
-  const payload = {
+  const payload: LocalSystemConfig = {
     id: 1,
     notifikasi: params.notifEnabled,
     saluran_notifikasi: params.saluranNotif,
@@ -82,13 +137,21 @@ export async function simpanPengaturanSistemSupabase(params: {
     updated_at: new Date().toISOString(),
   };
 
-  const { error } = await supabase.from("pengaturan_sistem").upsert(payload);
-  if (error) throw error;
+  if (typeof window !== "undefined") {
+    try {
+      window.localStorage.setItem(
+        SYSTEM_SETTINGS_STORAGE_KEY,
+        JSON.stringify(payload)
+      );
+    } catch {
+      // Ignore storage error
+    }
+  }
 
   await logAktivitas({
-    modul: "Pengaturan Sistem",
-    aktivitas: "Memperbarui konfigurasi notifikasi & payment gateway",
-    dataSesudah: payload,
+    modul: "Pengaturan",
+    aktivitas: "Simpan konfigurasi notifikasi & gateway".slice(0, 50),
+    dataSesudah: payload as unknown as Database["public"]["Tables"]["log_aktivitas"]["Row"]["data_sesudah"],
   });
 }
 
@@ -98,9 +161,9 @@ export async function tambahPenggunaBaruSupabase(userForm: {
   password: string;
   role: Role;
 }) {
-  const cleanUsername = userForm.username.trim().toLowerCase();
+  const cleanUsername = userForm.username.trim().toLowerCase().slice(0, 20);
   const payload = {
-    nama: userForm.nama.trim(),
+    nama: userForm.nama.trim().slice(0, 50),
     username: cleanUsername,
     password: userForm.password,
     role: userForm.role,
@@ -110,8 +173,8 @@ export async function tambahPenggunaBaruSupabase(userForm: {
   if (error) throw error;
 
   await logAktivitas({
-    modul: "Manajemen Pengguna",
-    aktivitas: `Menambahkan akun pengguna baru @${cleanUsername} (${userForm.role})`,
+    modul: "Pengguna",
+    aktivitas: `Tambah akun @${cleanUsername} (${userForm.role})`.slice(0, 50),
     dataSesudah: {
       nama: payload.nama,
       username: cleanUsername,
@@ -127,11 +190,11 @@ export async function ubahRolePenggunaSupabase(u: UserRow, newRole: Role) {
   const { error } = await supabase
     .from("pengguna")
     .update({ role: newRole })
-    .eq("id", u.id);
+    .eq("id_pengguna", u.id_pengguna || u.id);
   if (!error) {
     await logAktivitas({
-      modul: "Manajemen Pengguna",
-      aktivitas: `Mengubah peran @${u.username} dari ${u.role} menjadi ${newRole}`,
+      modul: "Pengguna",
+      aktivitas: `Ubah peran @${u.username} -> ${newRole}`.slice(0, 50),
       dataSebelum: { role: u.role },
       dataSesudah: { role: newRole },
     });
@@ -146,11 +209,11 @@ export async function resetPasswordPenggunaSupabase(
   const { error } = await supabase
     .from("pengguna")
     .update({ password: newPass })
-    .eq("id", u.id);
+    .eq("id_pengguna", u.id_pengguna || u.id);
   if (!error) {
     await logAktivitas({
-      modul: "Manajemen Pengguna",
-      aktivitas: `Mereset password untuk pengguna @${u.username}`,
+      modul: "Pengguna",
+      aktivitas: `Reset password @${u.username}`.slice(0, 50),
     });
   }
   return error;
@@ -163,11 +226,11 @@ export async function ubahStatusPenggunaSupabase(
   const { error } = await supabase
     .from("pengguna")
     .update({ status: nextStatus })
-    .eq("id", u.id);
+    .eq("id_pengguna", u.id_pengguna || u.id);
   if (!error) {
     await logAktivitas({
-      modul: "Manajemen Pengguna",
-      aktivitas: `Mengubah status akun @${u.username} menjadi ${nextStatus}`,
+      modul: "Pengguna",
+      aktivitas: `Status akun @${u.username} -> ${nextStatus}`.slice(0, 50),
       dataSebelum: { status: u.status },
       dataSesudah: { status: nextStatus },
     });

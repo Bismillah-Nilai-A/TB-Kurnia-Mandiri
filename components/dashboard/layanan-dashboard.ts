@@ -81,11 +81,13 @@ export async function muatDataDashboard() {
 
     const { data: lowStock } = await supabase
       .from("barang")
-      .select("id, stok, stok_min")
+      .select("id_barang, stok, stok_minimum")
       .lt("stok", 20);
 
     if (lowStock) {
-      stokMenipisCount = lowStock.length;
+      stokMenipisCount = lowStock.filter(
+        (b) => Number(b.stok) <= Number(b.stok_minimum ?? 5)
+      ).length;
     }
 
     const { count: custCount } = await supabase

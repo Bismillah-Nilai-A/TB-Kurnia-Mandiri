@@ -54,7 +54,7 @@ export async function prosesLoginPengguna(
   }
 
   const sessionUser = {
-    id: user.id,
+    id: String(user.id_pengguna || user.id),
     nama: user.nama,
     username: user.username,
     email: syntheticEmail,
@@ -65,8 +65,8 @@ export async function prosesLoginPengguna(
 
   await logAktivitas({
     modul: "Autentikasi",
-    aktivitas: `Login berhasil sebagai ${user.nama} (${user.role})`,
-    penggunaId: user.id,
+    aktivitas: `Login berhasil sebagai ${user.nama} (${user.role})`.slice(0, 50),
+    penggunaId: String(user.id_pengguna || user.id),
     dataSesudah: { username: user.username, role: user.role },
   });
 

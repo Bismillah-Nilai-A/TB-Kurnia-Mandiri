@@ -148,7 +148,8 @@ export const ROLE_LABEL: Record<string, string> = {
 };
 
 function mapPenggunaRow(row: {
-  id: string;
+  id_pengguna?: string;
+  id?: string;
   nama: string;
   username: string;
   role: string;
@@ -156,7 +157,7 @@ function mapPenggunaRow(row: {
 }): POSUser {
   const uname = String(row.username);
   return {
-    id: String(row.id),
+    id: String(row.id_pengguna || row.id),
     nama: String(row.nama),
     username: uname,
     email: usernameToSyntheticEmail(uname),
@@ -172,9 +173,9 @@ export async function muatDaftarAkunPeranSupabase(): Promise<{
 }> {
   const { data } = await supabase
     .from("pengguna")
-    .select("id, nama, username, role, status")
+    .select("id_pengguna, nama, username, role, status")
     .eq("status", "aktif")
-    .order("id", { ascending: true });
+    .order("id_pengguna", { ascending: true });
 
   const users = (data || []).map(mapPenggunaRow);
   const byRole: Partial<Record<Role, POSUser>> = {};
@@ -193,10 +194,10 @@ export async function cariAkunAktifPeranSupabase(
 ): Promise<POSUser | null> {
   const { data } = await supabase
     .from("pengguna")
-    .select("id, nama, username, role, status")
+    .select("id_pengguna, nama, username, role, status")
     .eq("role", targetRole)
     .eq("status", "aktif")
-    .order("id", { ascending: true })
+    .order("id_pengguna", { ascending: true })
     .limit(1)
     .maybeSingle();
 
@@ -221,23 +222,25 @@ export async function muatDataHeaderSupabase(): Promise<{
     await Promise.all([
       supabase
         .from("notifikasi")
-        .select("id, jenis, pesan, waktu, status_kirim")
+        .select("id_notifikasi, jenis, pesan, waktu, status_kirim")
         .order("waktu", { ascending: false })
         .limit(5),
       supabase
         .from("barang")
-        .select("id, kode_barang, nama, stok, satuan, harga")
+        .select(
+          "id_barang, kode_barang, nama, stok, satuan_dasar, harga_modal, satuan_barang(harga_jual_awal)"
+        )
         .order("kode_barang", { ascending: true })
         .limit(40),
       supabase
         .from("transaksi")
-        .select("id, no_nota, total, status_bayar")
+        .select("id_transaksi, no_nota, total, status_bayar")
         .order("tanggal", { ascending: false })
         .limit(15),
     ]);
 
   const notifications: HeaderNotif[] = (notifRows || []).map((n) => ({
-    id: String(n.id),
+    id: String(n.id_notifikasi),
     title: String(n.pesan || n.jenis),
     time: new Date(String(n.waktu)).toLocaleString("id-ID", {
       dateStyle: "short",
@@ -252,12 +255,18 @@ export async function muatDataHeaderSupabase(): Promise<{
 
   const searchEntries: SearchEntry[] = [];
   if (barangRows) {
-    for (const b of barangRows) {
+    for (const b of barangRows as Array<Record<string, unknown>>) {
+      const sbList = Array.isArray(b.satuan_barang)
+        ? (b.satuan_barang as Array<Record<string, unknown>>)
+        : [];
+      const hargaJual =
+        Number(sbList[0]?.harga_jual_awal) ||
+        Math.round(Number(b.harga_modal || 0) * 1.3);
       searchEntries.push({
-        id: `brg-${b.id}`,
+        id: `brg-${b.id_barang}`,
         category: "Barang",
         title: `${b.kode_barang} - ${b.nama}`,
-        subtitle: `Stok: ${b.stok} ${b.satuan} | Rp ${Number(b.harga).toLocaleString("id-ID")}`,
+        subtitle: `Stok: ${b.stok} ${b.satuan_dasar} | Rp ${hargaJual.toLocaleString("id-ID")}`,
         href: "/barang",
       });
     }
@@ -265,7 +274,7 @@ export async function muatDataHeaderSupabase(): Promise<{
   if (trxRows) {
     for (const t of trxRows) {
       searchEntries.push({
-        id: `trx-${t.id}`,
+        id: `trx-${t.id_transaksi}`,
         category: "Transaksi",
         title: `Nota ${t.no_nota}`,
         subtitle: `Rp ${Number(t.total).toLocaleString("id-ID")} (${String(t.status_bayar).toUpperCase()})`,

@@ -129,12 +129,11 @@ export function TabelPratinjauLaporan({
                 <tr className="border-b border-gray-200 bg-gray-50 font-semibold text-gray-500">
                   <th className="py-3 px-4">Kode</th>
                   <th className="py-3 px-4">Kategori</th>
-                  <th className="py-3 px-4">Merk</th>
                   <th className="py-3 px-4">Nama Barang</th>
                   <th className="py-3 px-4">Satuan</th>
                   <th className="py-3 px-4 text-right">Harga Modal</th>
                   <th className="py-3 px-4 text-right">Harga Jual</th>
-                  <th className="py-3 px-4 text-right">Stok Akhir</th>
+                  <th className="py-3 px-4 text-right">Stok Terkini</th>
                   <th className="py-3 px-4 text-right">Nilai Jual</th>
                 </tr>
               </thead>
@@ -145,13 +144,17 @@ export function TabelPratinjauLaporan({
                       {String(b.kode_barang)}
                     </td>
                     <td className="py-2.5 px-4">{String(b.kategori)}</td>
-                    <td className="py-2.5 px-4">{String(b.merk || "-")}</td>
                     <td className="py-2.5 px-4 font-semibold text-gray-900">
                       {String(b.nama)}
                     </td>
-                    <td className="py-2.5 px-4">{String(b.satuan)}</td>
+                    <td className="py-2.5 px-4">
+                      {String(b.satuan_dasar || b.satuan || "Pcs")}
+                    </td>
                     <td className="py-2.5 px-4 text-right whitespace-nowrap">
-                      Rp {Number(b.harga_beli || 0).toLocaleString("id-ID")}
+                      Rp{" "}
+                      {Number(
+                        b.harga_modal || b.harga_beli || 0
+                      ).toLocaleString("id-ID")}
                     </td>
                     <td className="py-2.5 px-4 text-right font-semibold whitespace-nowrap">
                       Rp {Number(b.harga || 0).toLocaleString("id-ID")}
