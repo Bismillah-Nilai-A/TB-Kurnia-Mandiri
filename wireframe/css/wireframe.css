@@ -1179,11 +1179,19 @@ textarea:disabled {
   flex-direction: column;
 }
 
+.wf-grid-pos > .wf-card > .wf-card-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .wf-pos-filter-grid {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   gap: 12px;
   align-items: center;
+  flex-shrink: 0;
 }
 
 @media (min-width: 640px) {
@@ -1192,12 +1200,32 @@ textarea:disabled {
   }
 }
 
+.wf-pos-catalog-wrap {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .wf-pos-catalog-scroll {
-  flex: 1;
-  max-height: 580px;
+  flex: 1 1 auto;
+  max-height: 520px;
   overflow-y: auto;
   padding-right: 4px;
   scrollbar-width: thin;
+}
+
+@media (min-width: 1024px) {
+  .wf-pos-catalog-wrap {
+    position: relative;
+    min-height: 480px;
+  }
+
+  .wf-pos-catalog-scroll {
+    position: absolute;
+    inset: 0;
+    max-height: none;
+  }
 }
 
 .wf-pos-catalog-grid {

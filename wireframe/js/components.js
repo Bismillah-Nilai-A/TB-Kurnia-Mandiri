@@ -268,8 +268,7 @@
       iconName = "check-circle";
       if (raw === "lunas") label = "Lunas";
       else if (raw === "disetujui") label = "Disetujui";
-      else if (raw === "terkirim") label = "Terkirim";
-      else if (raw === "selesai") label = "Selesai";
+      else if (raw === "terkirim" || raw === "selesai") label = "Selesai";
       else if (raw === "aktif") label = "Aktif";
       else if (raw === "aman") label = "Stok Aman";
     } else if (
@@ -277,6 +276,7 @@
       raw === "belum lunas" ||
       raw === "sebagian" ||
       raw === "menunggu" ||
+      raw === "menunggu dikirim" ||
       raw === "menunggu muat" ||
       raw === "dalam perjalanan" ||
       raw === "direncanakan" ||
@@ -284,14 +284,18 @@
       raw === "menipis"
     ) {
       cls = "wf-badge wf-badge-dashed";
-      iconName = "clock";
+      iconName = raw === "dalam perjalanan" ? "truck" : "clock";
       if (raw === "belum_lunas") label = "Belum Lunas";
       else if (raw === "sebagian") label = "Bayar Sebagian";
       else if (raw === "menunggu") label = "Menunggu";
+      else if (raw === "menunggu dikirim" || raw === "menunggu muat")
+        label = "Menunggu Dikirim";
+      else if (raw === "dalam perjalanan") label = "Dalam Perjalanan";
       else if (raw === "menipis") label = "Stok Menipis";
     } else if (
       raw === "ditolak" ||
       raw === "nonaktif" ||
+      raw === "ada kendala" ||
       raw === "berkendala" ||
       raw === "pengajuan penukaran" ||
       raw === "jatuh tempo" ||
@@ -302,6 +306,12 @@
       iconName = "alert";
       if (raw === "ditolak") label = "Ditolak";
       else if (raw === "nonaktif") label = "Nonaktif";
+      else if (
+        raw === "ada kendala" ||
+        raw === "berkendala" ||
+        raw === "pengajuan penukaran"
+      )
+        label = "Ada Kendala";
       else if (raw === "habis") label = "Stok Habis";
     } else {
       cls = "wf-badge wf-badge-muted";

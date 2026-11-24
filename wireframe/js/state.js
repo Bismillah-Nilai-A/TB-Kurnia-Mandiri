@@ -4,7 +4,7 @@
 */
 
 (function () {
-  const STORAGE_KEY = "tbkm_wireframe_prototype_state_v3";
+  const STORAGE_KEY = "tbkm_wireframe_prototype_state_v4";
 
   function cloneInitialData() {
     return JSON.parse(JSON.stringify(window.WF_INITIAL_DATA));

@@ -173,9 +173,7 @@
               jenis === "masuk" ? "Catat Barang Masuk" : "Catat Barang Keluar",
           },
         ],
-        jenis === "masuk"
-          ? "Penerimaan Barang Masuk dari Pemasok"
-          : "Pengeluaran Barang Gudang",
+        jenis === "masuk" ? "Catat Barang Masuk" : "Catat Barang Keluar",
         '<button type="button" class="wf-btn" data-nav="barang-masuk-keluar">' +
           icon("arrow-left", "wf-icon-sm") +
           "<span>Kembali</span></button>"
@@ -394,9 +392,7 @@
     return (
       window.WFUI.pageHeader(
         [{ label: "Persediaan & Pemasok" }, { label: "Stok Minimum & Restok" }],
-        "Stok Minimum & Perencanaan Restok (" +
-          hampirHabis.length +
-          " Hampir Habis)"
+        "Stok Minimum & Restok"
       ) +
       '<div class="wf-stack">' +
       /* 1. Form Buat Rencana Restok (Lebar Penuh, Rata Horizontal di Desktop) */
@@ -449,7 +445,9 @@
       "</form></div></div>" +
       /* 2. Tabel Batas Stok Minimum Barang (Lebar Penuh 100%, Tidak Sempit) */
       '<div class="wf-card">' +
-      '<div class="wf-card-header"><h2 class="wf-card-title">Batas Stok Minimum Barang</h2></div>' +
+      '<div class="wf-card-header"><h2 class="wf-card-title">Batas Stok Minimum Barang</h2><span class="wf-badge wf-badge-dark">' +
+      hampirHabis.length +
+      " Hampir Habis</span></div>" +
       '<div class="wf-table-wrap"><table class="wf-table">' +
       "<thead><tr><th>Kode</th><th>Nama Barang</th><th>Kategori</th><th>Stok Saat Ini</th><th>Batas Minimum</th><th>Status</th></tr></thead>" +
       "<tbody>" +
@@ -526,7 +524,7 @@
     return (
       window.WFUI.pageHeader(
         [{ label: "Persediaan & Pemasok" }, { label: "Utang & Tempo Pemasok" }],
-        "Utang & Pembayaran Tempo Pemasok",
+        "Utang & Tempo Pemasok",
         '<button type="button" class="wf-btn wf-btn-primary" data-nav="form-tagihan-pemasok">' +
           icon("plus", "wf-icon-sm") +
           "<span>Tambah Tagihan Tempo</span></button>"
@@ -567,7 +565,7 @@
         [
           { label: "Persediaan & Pemasok" },
           { label: "Utang & Tempo Pemasok", page: "utang-pemasok" },
-          { label: "Tambah Tagihan Tempo" },
+          { label: "Tambah Tagihan Tempo Pemasok" },
         ],
         "Tambah Tagihan Tempo Pemasok",
         '<button type="button" class="wf-btn" data-nav="utang-pemasok">' +

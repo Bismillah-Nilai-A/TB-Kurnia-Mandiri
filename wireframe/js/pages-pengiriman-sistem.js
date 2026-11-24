@@ -70,9 +70,9 @@
         window.WFUI.pageHeader(
           [
             { label: "Pengiriman Lapangan" },
-            { label: "Laporan Kendala Pengiriman" },
+            { label: "Penugasan & Proses Kirim" },
           ],
-          "Laporan Kendala Pengiriman"
+          "Penugasan & Proses Kirim"
         ) +
         tabsHtml +
         '<div class="wf-stack">' +
@@ -149,7 +149,7 @@
     // TAB 3: RIWAYAT & BUKTI PENERIMAAN PENGIRIMAN
     if (tab === "riwayat") {
       const selesaiList = db.pengiriman.filter(function (p) {
-        return p.status === "Terkirim" || p.status === "Pengajuan Penukaran";
+        return p.status === "Selesai" || p.status === "Ada Kendala";
       });
       const pgRiwayatKirim = window.WFUI.paginate(
         selesaiList,
@@ -161,8 +161,11 @@
 
       return (
         window.WFUI.pageHeader(
-          [{ label: "Pengiriman Lapangan" }, { label: "Riwayat Pengiriman" }],
-          "Riwayat & Bukti Penerimaan Pengiriman"
+          [
+            { label: "Pengiriman Lapangan" },
+            { label: "Penugasan & Proses Kirim" },
+          ],
+          "Penugasan & Proses Kirim"
         ) +
         tabsHtml +
         '<div class="wf-card">' +
@@ -268,7 +271,7 @@
           { label: "Pengiriman Lapangan" },
           { label: "Penugasan & Proses Kirim" },
         ],
-        "Penugasan & Monitoring Pengiriman",
+        "Penugasan & Proses Kirim",
         role === "admin" || role === "kasir"
           ? '<button type="button" class="wf-btn wf-btn-primary" data-action="open-tambah-penugasan">' +
             icon("plus", "wf-icon-sm") +
@@ -287,10 +290,10 @@
         size: "sm",
         options: [
           { value: "SEMUA", label: "Semua Status Pengiriman" },
-          { value: "Menunggu Muat", label: "Menunggu Muat" },
+          { value: "Menunggu Dikirim", label: "Menunggu Dikirim" },
           { value: "Dalam Perjalanan", label: "Dalam Perjalanan" },
-          { value: "Terkirim", label: "Terkirim" },
-          { value: "Pengajuan Penukaran", label: "Pengajuan Penukaran" },
+          { value: "Selesai", label: "Selesai" },
+          { value: "Ada Kendala", label: "Ada Kendala" },
         ],
       }) +
       "</div>" +
@@ -317,9 +320,9 @@
         [
           { label: "Pengiriman Lapangan" },
           { label: "Penugasan & Proses Kirim", page: "pengiriman-barang" },
-          { label: k.no_nota },
+          { label: "Proses Pengiriman" },
         ],
-        "Proses Pengiriman: " + k.no_nota,
+        "Proses Pengiriman",
         '<button type="button" class="wf-btn" data-nav="pengiriman-barang">' +
           icon("arrow-left", "wf-icon-sm") +
           "<span>Kembali</span></button>"
@@ -387,7 +390,7 @@
       "</div>" +
       '<button type="submit" class="wf-btn wf-btn-primary">' +
       icon("check", "wf-icon-sm") +
-      "<span>Selesaikan Pengiriman (Terkirim)</span></button>" +
+      "<span>Selesaikan Pengiriman (Selesai)</span></button>" +
       "</form>" +
       '<div class="wf-section-divider">' +
       '<form id="wf-form-tukar-kirim" class="wf-stack" data-id="' +
@@ -500,7 +503,7 @@
           { label: "Pengguna & Hak Akses", page: "pengguna-dan-hak-akses" },
           { label: isEdit ? "Ubah Pengguna" : "Tambah Pengguna" },
         ],
-        isEdit ? "Ubah Akun: " + u.nama : "Tambah Akun Pengguna",
+        isEdit ? "Ubah Pengguna" : "Tambah Pengguna",
         '<button type="button" class="wf-btn" data-nav="pengguna-dan-hak-akses">' +
           icon("arrow-left", "wf-icon-sm") +
           "<span>Kembali</span></button>"
@@ -633,7 +636,7 @@
     return (
       window.WFUI.pageHeader(
         [{ label: "Sistem & Audit" }, { label: "Log Aktivitas Sistem" }],
-        "Log Aktivitas Pengguna",
+        "Log Aktivitas Sistem",
         '<button type="button" class="wf-btn" data-action="unduh-log-aktivitas">' +
           icon("download", "wf-icon-sm") +
           "<span>Unduh Log</span></button>"

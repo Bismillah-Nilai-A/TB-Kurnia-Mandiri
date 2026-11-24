@@ -768,7 +768,7 @@
                 return i.jumlah + " " + i.nama_satuan + " " + i.nama_barang;
               })
               .join(", "),
-            status: "Menunggu Muat",
+            status: "Menunggu Dikirim",
             foto_bukti_url: "",
             alasan_penukaran: "",
             foto_barang_url: "",
@@ -1270,7 +1270,7 @@
           nama_pengirim: kurir.replace(/\s*\(.*?\)\s*/g, ""),
           alamat_tujuan: alamat,
           ringkasan_barang: brg,
-          status: "Menunggu Muat",
+          status: "Menunggu Dikirim",
           foto_bukti_url: "",
           alasan_penukaran: "",
           foto_barang_url: "",
@@ -1307,7 +1307,7 @@
             "Memeriksa kelengkapan & memuat barang " +
               k.no_nota +
               " ke kendaraan",
-            "Status: Menunggu Muat",
+            "Status: Menunggu Dikirim",
             "Status: Dalam Perjalanan"
           );
           window.WF.setFlash(
@@ -1325,7 +1325,7 @@
           return x.id_pengiriman === id;
         });
         if (k) {
-          k.status = "Berkendala";
+          k.status = "Ada Kendala";
           window.WF.pushNotif(
             "Barang Tidak Lengkap",
             "Kasir",
@@ -1337,7 +1337,7 @@
           window.WF.recordLog(
             "Pengiriman Barang",
             "Melaporkan barang tidak lengkap pada penugasan " + k.no_nota,
-            "Menunggu Muat",
+            "Menunggu Dikirim",
             "Laporan ketidaklengkapan dikirim ke Kasir"
           );
           window.WF.setFlash(
@@ -1924,7 +1924,7 @@
         return x.id_pengiriman === id;
       });
       if (k) {
-        k.status = "Terkirim";
+        k.status = "Selesai";
         k.foto_bukti_url = form.foto_bukti_url.value.trim();
         k.tanggal_terima = window.WF.nowString();
         window.WF.pushNotif(
@@ -1941,12 +1941,12 @@
           "Pengiriman Barang",
           "Mengunggah bukti penerimaan & menyelesaikan pengiriman " + k.no_nota,
           "Dalam Perjalanan",
-          "Terkirim (" + k.foto_bukti_url + ")"
+          "Selesai (" + k.foto_bukti_url + ")"
         );
         window.WF.setFlash(
           "Pengiriman " +
             k.no_nota +
-            " selesai (Terkirim) dan bukti penerimaan tersimpan."
+            " selesai dan bukti penerimaan tersimpan."
         );
         window.WF.navigate("pengiriman-barang");
       }
@@ -1960,7 +1960,7 @@
         return x.id_pengiriman === id;
       });
       if (k) {
-        k.status = "Pengajuan Penukaran";
+        k.status = "Ada Kendala";
         k.alasan_penukaran = form.alasan_penukaran.value.trim();
         window.WF.pushNotif(
           "Pengajuan Penukaran",
@@ -1977,7 +1977,7 @@
             k.no_nota +
             ")",
           "Dalam Perjalanan",
-          "Pengajuan Penukaran: " + k.alasan_penukaran
+          "Ada Kendala (Penukaran): " + k.alasan_penukaran
         );
         window.WF.setFlash(
           "Pengajuan penukaran barang pada " +
@@ -1998,7 +1998,7 @@
       const jenis = form.jenis_kendala.value;
       const desc = form.deskripsi.value.trim();
 
-      k.status = "Berkendala";
+      k.status = "Ada Kendala";
       db.laporan_kendala.unshift({
         id_laporan: "knd-" + Date.now(),
         pengiriman_id: k.id_pengiriman,

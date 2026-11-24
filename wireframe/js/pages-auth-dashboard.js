@@ -149,19 +149,19 @@
     if (role === "pengirim") {
       const daftarKirim = db.pengiriman;
       const menungguMuat = daftarKirim.filter(function (k) {
-        return k.status === "Menunggu Muat";
+        return k.status === "Menunggu Dikirim";
       }).length;
       const dalamPerjalanan = daftarKirim.filter(function (k) {
         return k.status === "Dalam Perjalanan";
       }).length;
       const selesaiKirim = daftarKirim.filter(function (k) {
-        return k.status === "Terkirim";
+        return k.status === "Selesai";
       }).length;
 
       return (
         window.WFUI.pageHeader(
           [{ label: "Utama" }, { label: "Dashboard" }],
-          "Ringkasan Hari Ini",
+          "Dashboard",
           '<button type="button" class="wf-btn" data-nav="dashboard">' +
             icon("refresh", "wf-icon-sm") +
             "<span>Muat Ulang</span></button>" +
@@ -180,7 +180,7 @@
         '<div class="wf-stat-sub">Penugasan pengiriman hari ini</div>' +
         "</div>" +
         '<div class="wf-card wf-stat-card">' +
-        '<div class="wf-stat-top"><span class="wf-stat-label">Menunggu Muat</span><span class="wf-stat-icon">' +
+        '<div class="wf-stat-top"><span class="wf-stat-label">Menunggu Dikirim</span><span class="wf-stat-icon">' +
         icon("package") +
         "</span></div>" +
         '<div class="wf-stat-value">' +
@@ -198,7 +198,7 @@
         '<div class="wf-stat-sub">Menuju alamat pelanggan</div>' +
         "</div>" +
         '<div class="wf-card wf-stat-card">' +
-        '<div class="wf-stat-top"><span class="wf-stat-label">Selesai Terkirim</span><span class="wf-stat-icon">' +
+        '<div class="wf-stat-top"><span class="wf-stat-label">Selesai</span><span class="wf-stat-icon">' +
         icon("check-circle") +
         "</span></div>" +
         '<div class="wf-stat-value">' +
@@ -340,7 +340,7 @@
     return (
       window.WFUI.pageHeader(
         [{ label: "Utama" }, { label: "Dashboard" }],
-        "Ringkasan Hari Ini",
+        "Dashboard",
         actionsHtml
       ) +
       '<div class="wf-grid-stats">' +

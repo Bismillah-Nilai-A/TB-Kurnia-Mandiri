@@ -118,7 +118,7 @@
     return (
       window.WFUI.pageHeader(
         [{ label: "Persediaan & Pemasok" }, { label: "Data Barang & Barcode" }],
-        "Data Barang & Multi-Satuan",
+        "Data Barang & Barcode",
         '<button type="button" class="wf-btn" data-nav="cetak-barcode">' +
           icon("barcode", "wf-icon-sm") +
           "<span>Cetak Label Barcode</span></button>" +
@@ -221,9 +221,9 @@
         [
           { label: "Persediaan & Pemasok" },
           { label: "Data Barang & Barcode", page: "data-barang" },
-          { label: isEdit ? "Ubah Barang" : "Tambah Barang" },
+          { label: isEdit ? "Ubah Data Barang" : "Tambah Barang Baru" },
         ],
-        isEdit ? "Ubah Data Barang (" + b.kode_barang + ")" : "Tambah Barang Baru",
+        isEdit ? "Ubah Data Barang" : "Tambah Barang Baru",
         '<button type="button" class="wf-btn" data-nav="data-barang">' +
           icon("arrow-left", "wf-icon-sm") +
           "<span>Kembali</span></button>"
@@ -399,7 +399,7 @@
           { label: "Data Barang & Barcode", page: "data-barang" },
           { label: "Cetak Label Barcode" },
         ],
-        "Cetak Label Barcode Produk & Meja Kasir",
+        "Cetak Label Barcode",
         '<button type="button" class="wf-btn" data-nav="data-barang">' +
           icon("arrow-left", "wf-icon-sm") +
           "<span>Kembali</span></button>" +
@@ -572,7 +572,7 @@
         [
           { label: "Penjualan & Kasir" },
           { label: "Data Pelanggan", page: "data-pelanggan" },
-          { label: isEdit ? "Ubah Pelanggan" : "Tambah Pelanggan" },
+          { label: isEdit ? "Ubah Data Pelanggan" : "Tambah Pelanggan Baru" },
         ],
         isEdit ? "Ubah Data Pelanggan" : "Tambah Pelanggan Baru",
         '<button type="button" class="wf-btn" data-nav="data-pelanggan">' +
@@ -670,14 +670,16 @@
           { label: "Data Pelanggan", page: "data-pelanggan" },
           { label: "Riwayat Pelanggan" },
         ],
-        p.nama,
+        "Riwayat Pelanggan",
         '<button type="button" class="wf-btn" data-nav="data-pelanggan">' +
           icon("arrow-left", "wf-icon-sm") +
           "<span>Kembali</span></button>" +
           '<button type="button" class="wf-btn wf-btn-primary" data-nav="kasbon-dan-piutang">Kelola Piutang</button>'
       ) +
       '<div class="wf-grid-stats">' +
-      '<div class="wf-card wf-stat-card"><div class="wf-stat-label">Jenis &amp; Kontak</div><div style="font-weight:700;font-size:1.0625rem;text-transform:uppercase;">' +
+      '<div class="wf-card wf-stat-card"><div class="wf-stat-label">Pelanggan &amp; Kontak</div><div style="font-weight:700;font-size:1rem;">' +
+      esc(p.nama) +
+      '</div><div style="font-size:0.75rem;color:var(--wf-text-muted);text-transform:uppercase;">' +
       esc(p.jenis) +
       " &middot; " +
       esc(p.kontak) +

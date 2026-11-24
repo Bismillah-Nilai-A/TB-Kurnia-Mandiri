@@ -200,17 +200,23 @@
       (selectedPelanggan.status_kasbon !== "aktif" ||
         cartTotal > sisaLimitKasbon);
 
+    const defaultAlamatKirim =
+      pos.alamat_kirim ||
+      (selectedPelanggan.alamat !== "Pembelian Langsung di Toko"
+        ? selectedPelanggan.alamat
+        : "");
+
     return (
       window.WFUI.pageHeader(
-        [{ label: "Penjualan & Kasir" }, { label: "Transaksi Kasir" }],
-        "Transaksi Kasir (POS)",
+        [{ label: "Penjualan & Kasir" }, { label: "Transaksi Penjualan (POS)" }],
+        "Transaksi Penjualan (POS)",
         '<button type="button" class="wf-btn" data-action="pos-simulasi-scan">' +
           icon("barcode", "wf-icon-sm") +
           "<span>Pindai Barcode</span></button>" +
           '<button type="button" class="wf-btn" data-nav="riwayat-transaksi">Riwayat Transaksi</button>'
       ) +
       '<div class="wf-grid-pos">' +
-      /* Panel Kiri: Katalog Produk (Sama tinggi dengan Keranjang & memiliki TablePagination di bagian bawah) */
+      /* Panel Kiri: Katalog Produk (Sama tinggi dengan Keranjang) */
       '<div class="wf-card">' +
       '<div class="wf-card-header">' +
       '<h2 class="wf-card-title">Pilih Barang</h2>' +
@@ -245,9 +251,11 @@
       }) +
       "</div>" +
       "</div>" +
+      '<div class="wf-pos-catalog-wrap">' +
       '<div class="wf-pos-catalog-scroll">' +
       '<div class="wf-pos-catalog-grid">' +
       katalogHtml +
+      "</div>" +
       "</div>" +
       "</div>" +
       "</div>" +
@@ -356,7 +364,7 @@
           '<div class="wf-field">' +
           '<label for="pos-alamat-kirim" class="wf-label" style="font-size:0.8125rem;">Alamat Tujuan</label>' +
           '<input id="pos-alamat-kirim" type="text" class="wf-input" placeholder="Alamat lokasi pengiriman..." value="' +
-          esc(pos.alamat_kirim || selectedPelanggan.alamat) +
+          esc(defaultAlamatKirim) +
           '" data-pos-input="alamat_kirim" />' +
           "</div></div>"
         : "") +
@@ -602,7 +610,7 @@
         [
           { label: "Penjualan & Kasir" },
           { label: "Penukaran Barang", page: "penukaran-barang" },
-          { label: "Form Penukaran Barang" },
+          { label: "Proses Penukaran Barang" },
         ],
         "Proses Penukaran Barang",
         '<button type="button" class="wf-btn" data-nav="penukaran-barang">' +
@@ -704,7 +712,8 @@
     const role = window.WF.ui.currentUser
       ? window.WF.ui.currentUser.role
       : "admin";
-    const tab = f.kasbonTab || "piutang";
+    // Sesuai SRS (UC-05 vs UC-19): Persetujuan Kasbon hanya untuk Pemilik/Admin
+    const tab = role === "admin" ? f.kasbonTab || "piutang" : "piutang";
 
     const piutangNotas = db.transaksi.filter(function (t) {
       return Number(t.sisa_tagihan) > 0;
@@ -713,20 +722,23 @@
       return k.status === "menunggu";
     }).length;
 
-    const tabsHtml = responsiveTabs({
-      filterKey: "kasbonTab",
-      value: tab,
-      options: [
-        {
-          value: "piutang",
-          label: "Tagihan Piutang (" + piutangNotas.length + ")",
-        },
-        {
-          value: "persetujuan",
-          label: "Persetujuan Kasbon (" + menungguCount + " Menunggu)",
-        },
-      ],
-    });
+    const tabsHtml =
+      role === "admin"
+        ? responsiveTabs({
+            filterKey: "kasbonTab",
+            value: tab,
+            options: [
+              {
+                value: "piutang",
+                label: "Tagihan Piutang (" + piutangNotas.length + ")",
+              },
+              {
+                value: "persetujuan",
+                label: "Persetujuan Kasbon (" + menungguCount + " Menunggu)",
+              },
+            ],
+          })
+        : "";
 
     if (tab === "persetujuan") {
       const pgKasbon = window.WFUI.paginate(
