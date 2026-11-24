@@ -56,6 +56,9 @@ Folder ini (`dokumentasi-sistem/`) berisi dokumentasi teknis arsitektur kode, st
 
 > **Catatan Dokumentasi Wireframe**: Seluruh dokumentasi terkait pembuatan dan revisi wireframe serta interactive prototype dipisahkan ke dalam folder tersendiri di [`../dokumentasi-wireframe/`](../dokumentasi-wireframe/README.md).
 
+14. [**14 - Revisi Skema Database Sesuai Class Diagram, Use Case & Activity Diagram Terbaru (Penghapusan Field Double)**](./14-revisi-database-class-diagram-terbaru.md)
+    - Dokumentasi pembersihan seluruh kolom ganda (*duplicate fields*) pada `barang`, `rencana_restok`, `detail_transaksi`, `mutasi_barang`, `detail_mutasi_barang`, dan `pengiriman`, penghapusan tabel usang (`stok`, `pengaturan_sistem`), serta penambahan tabel baru sesuai Class Diagram (`satuan_barang`, `pemasok`, `tagihan_pemasok`, `pembayaran_pemasok`, `penukaran`, `detail_penukaran`).
+
 ## Batasan Logika Bisnis yang Dijaga 100%
 
 Seluruh pembaruan arsitektur modular dan desain antarmuka menjaga 100% keutuhan:
