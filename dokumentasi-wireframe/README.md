@@ -20,3 +20,5 @@ Folder ini dipisahkan dari [`../dokumentasi-sistem/`](../dokumentasi-sistem/READ
    - Pembuatan halaman mandiri `wireframe/panduan-gaya.html` yang menampilkan palet warna, ukuran teks `Plus Jakarta Sans`, lencana status, tombol, dan seluruh komponen dropdown dalam kondisi terbuka statis agar terbaca penuh oleh ekstensi browser-ke-Figma.
 7. [**07 - Penyederhanaan Teks Halaman Panduan Gaya Sesuai Aturan Anti-Slop**](./07-penyederhanaan-teks-panduan-gaya-anti-slop.md)
    - Pemangkasan paragraf penjelasan berlebih, nomor teknis, dan lencana kategori pada `wireframe/panduan-gaya.html` agar bersih seperti contoh panduan gaya referensi.
+8. [**08 - Penyesuaian Wireframe dengan Dokumen SRS v1.0 & SDD v1.0**](./08-penyesuaian-wireframe-dengan-srs-dan-sdd.md)
+   - Pembatasan tab `Persetujuan Kasbon` khusus untuk Pemilik/Admin (`UC-05` vs `UC-19`), penyeragaman status pengiriman menjadi `Menunggu Dikirim`, `Dalam Perjalanan`, `Selesai`, dan `Ada Kendala` sesuai SRS Bab 7.1, penyeragaman seluruh nama menu sidebar dengan judul `<h1>` dan breadcrumb halaman konten, serta perbaikan tinggi katalog POS saat opsi kirim barang dicentang.
