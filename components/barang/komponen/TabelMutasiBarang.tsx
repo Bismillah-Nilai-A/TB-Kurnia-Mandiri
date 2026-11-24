@@ -51,8 +51,11 @@ export function TabelMutasiBarang({
               jenis: "masuk",
               barang_id: items[0]?.id || "",
               jumlah: "10",
+              pemasok_id: "",
               supplier: "",
-              no_referensi: `BM-${Date.now().toString().slice(-5)}`,
+              no_referensi: `SJ-${Date.now().toString().slice(-5)}`,
+              jenis_bayar: "tunai",
+              tanggal_jatuh_tempo: "",
               tujuan: "Gudang Utama",
               keterangan: "",
             });

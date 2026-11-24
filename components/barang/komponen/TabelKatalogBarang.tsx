@@ -57,7 +57,7 @@ export function TabelKatalogBarang({
     <>
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-[1fr_220px_auto] items-center gap-3 print:hidden">
         <SearchField
-          placeholder="Cari kode, nama barang, merk, atau barcode..."
+          placeholder="Cari kode, nama barang, kategori, atau barcode..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full sm:col-span-2 lg:col-span-1"
@@ -112,7 +112,6 @@ export function TabelKatalogBarang({
                     <tr className="border-b border-gray-200 bg-gray-50 text-xs font-semibold text-gray-500">
                       <th className="py-3 px-3">Kode</th>
                       <th className="py-3 px-3">Kategori</th>
-                      <th className="py-3 px-3">Merk</th>
                       <th className="py-3 px-3">Nama Barang</th>
                       <th className="py-3 px-3">Satuan</th>
                       <th className="py-3 px-3 text-right">Harga Modal</th>
@@ -125,10 +124,11 @@ export function TabelKatalogBarang({
                   <tbody className="divide-y divide-gray-200 text-sm">
                     {pagedItems.map((item) => {
                       const hargaModal =
+                        Number(item.harga_modal) ||
                         Number(item.harga_beli) ||
                         Math.round(Number(item.harga) / 1.3);
                       const hargaJual = Number(item.harga);
-                      const isLow = item.stok <= item.stok_min;
+                      const isLow = item.stok <= item.stok_minimum;
 
                       return (
                         <tr key={item.id} className="hover:bg-gray-50">
@@ -138,14 +138,11 @@ export function TabelKatalogBarang({
                           <td className="py-2.5 px-3 text-xs text-gray-600 whitespace-nowrap">
                             {item.kategori}
                           </td>
-                          <td className="py-2.5 px-3 text-xs text-gray-700">
-                            {item.merk || "-"}
-                          </td>
                           <td className="py-2.5 px-3 font-semibold text-gray-900">
                             {item.nama}
                           </td>
                           <td className="py-2.5 px-3 text-xs text-gray-600">
-                            {item.satuan}
+                            {item.satuan_dasar}
                           </td>
                           <td className="py-2.5 px-3 text-right text-gray-600 text-xs whitespace-nowrap">
                             Rp {hargaModal.toLocaleString("id-ID")}

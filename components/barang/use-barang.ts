@@ -5,12 +5,16 @@ import {
   type BarangRow,
   type MutasiJoined,
   type RestokJoined,
+  type PemasokRow,
+  type TagihanPemasokRow,
   type FormBarangState,
   type FormMutasiState,
   type FormRestokState,
   INITIAL_KATALOG,
   INITIAL_MUTASI,
   INITIAL_RESTOK,
+  INITIAL_PEMASOK,
+  INITIAL_TAGIHAN_PEMASOK,
   fetchAllBarangData,
   simpanBarangKeDatabase,
   hapusBarangDariDatabase,
@@ -29,6 +33,11 @@ export function useBarang() {
   const [items, setItems] = useState<BarangRow[]>(INITIAL_KATALOG);
   const [mutasiList, setMutasiList] = useState<MutasiJoined[]>(INITIAL_MUTASI);
   const [restokList, setRestokList] = useState<RestokJoined[]>(INITIAL_RESTOK);
+  const [pemasokList, setPemasokList] =
+    useState<PemasokRow[]>(INITIAL_PEMASOK);
+  const [tagihanPemasokList, setTagihanPemasokList] = useState<
+    TagihanPemasokRow[]
+  >(INITIAL_TAGIHAN_PEMASOK);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -38,40 +47,42 @@ export function useBarang() {
   const [formData, setFormData] = useState<FormBarangState>({
     kode_barang: "",
     nama: "",
-    kategori: "BAHAN BANGUNAN",
-    merk: "",
+    kategori: "Material Dasar",
     barcode: "",
+    barcode_fisik: true,
     harga_beli: "",
     harga: "",
-    stok_awal: "",
     stok: "",
     stok_min: "5",
-    satuan: "pcs",
-    keterangan: "",
+    satuan: "Pcs",
+    satuan_pembelian: "Pcs",
+    isi_per_satuan_beli: "1",
   });
   const [submitting, setSubmitting] = useState(false);
 
-  // Modal Barcode Print (BRG-05)
+  // Modal Barcode Print
   const [barcodeItem, setBarcodeItem] = useState<BarangRow | null>(null);
 
-  // Modal Mutasi Barang Masuk / Keluar (MUT-01..06)
+  // Modal Mutasi Barang Masuk / Keluar
   const [showMutasiModal, setShowMutasiModal] = useState(false);
   const [mutasiForm, setMutasiForm] = useState<FormMutasiState>({
     jenis: "masuk",
     barang_id: "",
     jumlah: "1",
+    pemasok_id: "",
     supplier: "",
     no_referensi: "",
+    jenis_bayar: "tunai",
+    tanggal_jatuh_tempo: "",
     tujuan: "Penjualan / Operasional",
     keterangan: "",
   });
 
-  // Modal Rencana Restok (STR-01..03)
+  // Modal Rencana Restok
   const [showRestokModal, setShowRestokModal] = useState(false);
   const [restokForm, setRestokForm] = useState<FormRestokState>({
     barang_id: "",
     restok: "20",
-    target: "Restok gudang utama minggu ini",
   });
 
   const fetchAllData = useCallback(async () => {
@@ -82,6 +93,8 @@ export function useBarang() {
       setItems(data.items);
       setMutasiList(data.mutasiList);
       setRestokList(data.restokList);
+      setPemasokList(data.pemasokList);
+      setTagihanPemasokList(data.tagihanPemasokList);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Gagal memuat data");
     } finally {
@@ -101,15 +114,14 @@ export function useBarang() {
   const filtered = items.filter((item) => {
     const matchCategory =
       selectedCategory === "SEMUA" || item.kategori === selectedCategory;
-    const matchStok = filterStok === "semua" || item.stok <= item.stok_min;
+    const matchStok =
+      filterStok === "semua" || item.stok <= item.stok_minimum;
     const q = search.toLowerCase();
     const matchSearch =
       item.nama.toLowerCase().includes(q) ||
       item.kode_barang.toLowerCase().includes(q) ||
       item.kategori.toLowerCase().includes(q) ||
-      (item.merk || "").toLowerCase().includes(q) ||
-      (item.barcode || "").toLowerCase().includes(q) ||
-      (item.keterangan || "").toLowerCase().includes(q);
+      (item.barcode || "").toLowerCase().includes(q);
     return matchCategory && matchStok && matchSearch;
   });
 
@@ -118,16 +130,16 @@ export function useBarang() {
     setFormData({
       kode_barang: `A${String(items.length + 1).padStart(3, "0")}`,
       nama: "",
-      kategori: "BAHAN BANGUNAN",
-      merk: "",
-      barcode: `8997001${String(items.length + 1).padStart(4, "0")}`,
+      kategori: "Material Dasar",
+      barcode: `8992026${String(items.length + 1).padStart(5, "0")}`,
+      barcode_fisik: true,
       harga_beli: "",
       harga: "",
-      stok_awal: "20",
       stok: "20",
       stok_min: "5",
-      satuan: "pcs",
-      keterangan: "",
+      satuan: "Pcs",
+      satuan_pembelian: "Pcs",
+      isi_per_satuan_beli: "1",
     });
     setShowModal(true);
   };
@@ -138,15 +150,15 @@ export function useBarang() {
       kode_barang: item.kode_barang,
       nama: item.nama,
       kategori: item.kategori,
-      merk: item.merk || "",
       barcode: item.barcode || "",
-      harga_beli: String(item.harga_beli || 0),
+      barcode_fisik: item.barcode_fisik ?? true,
+      harga_beli: String(item.harga_beli || item.harga_modal || 0),
       harga: String(item.harga || 0),
-      stok_awal: String(item.stok_awal || item.stok || 0),
       stok: String(item.stok || 0),
-      stok_min: String(item.stok_min || 5),
-      satuan: item.satuan || "pcs",
-      keterangan: item.keterangan || "",
+      stok_min: String(item.stok_minimum || 5),
+      satuan: item.satuan_dasar || "Pcs",
+      satuan_pembelian: item.satuan_pembelian || item.satuan_dasar || "Pcs",
+      isi_per_satuan_beli: String(item.isi_per_satuan_beli || 1),
     });
     setShowModal(true);
   };
@@ -231,15 +243,19 @@ export function useBarang() {
   };
 
   const totalNilaiStokJual = filtered.reduce(
-    (acc, item) => acc + Number(item.harga) * item.stok,
+    (acc, item) => acc + Number(item.harga) * Number(item.stok),
     0
   );
   const totalNilaiModal = filtered.reduce(
     (acc, item) =>
-      acc + Number(item.harga_beli || item.harga * 0.75) * item.stok,
+      acc +
+      Number(item.harga_modal || item.harga_beli || item.harga / 1.3) *
+        Number(item.stok),
     0
   );
-  const lowStockItems = items.filter((i) => i.stok <= i.stok_min);
+  const lowStockItems = items.filter(
+    (i) => Number(i.stok) <= Number(i.stok_minimum)
+  );
 
   return {
     activeTab,
@@ -253,6 +269,8 @@ export function useBarang() {
     items,
     mutasiList,
     restokList,
+    pemasokList,
+    tagihanPemasokList,
     loading,
     error,
     setError,

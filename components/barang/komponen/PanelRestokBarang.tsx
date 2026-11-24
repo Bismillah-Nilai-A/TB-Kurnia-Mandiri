@@ -95,10 +95,10 @@ export function PanelRestokBarang({
                           {item.nama}
                         </td>
                         <td className="py-2.5 px-4 text-right font-bold text-red-600 whitespace-nowrap">
-                          {item.stok} {item.satuan}
+                          {item.stok} {item.satuan_dasar}
                         </td>
                         <td className="py-2.5 px-4 text-right text-gray-500">
-                          {item.stok_min}
+                          {item.stok_minimum}
                         </td>
                         <td className="py-2.5 px-4 text-center">
                           <Button
@@ -109,9 +109,11 @@ export function PanelRestokBarang({
                               setRestokForm({
                                 barang_id: item.id,
                                 restok: String(
-                                  Math.max(20, item.stok_min * 3 - item.stok)
+                                  Math.max(
+                                    20,
+                                    item.stok_minimum * 3 - item.stok
+                                  )
                                 ),
-                                target: `Pengadaan ulang ${item.nama}`,
                               });
                               setShowRestokModal(true);
                             }}
@@ -149,7 +151,6 @@ export function PanelRestokBarang({
               setRestokForm({
                 barang_id: lowStockItems[0]?.id || items[0]?.id || "",
                 restok: "25",
-                target: "Pengadaan rutin mingguan",
               });
               setShowRestokModal(true);
             }}
@@ -172,10 +173,9 @@ export function PanelRestokBarang({
                       <th className="py-2.5 px-4">Tanggal</th>
                       <th className="py-2.5 px-4">Barang</th>
                       <th className="py-2.5 px-4 text-right whitespace-nowrap">
-                        Rencana Qty
+                        Jumlah Restok
                       </th>
                       <th className="py-2.5 px-4">Status Restok</th>
-                      <th className="py-2.5 px-4">Catatan Target</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-gray-200 text-xs">
@@ -191,7 +191,7 @@ export function PanelRestokBarang({
                           {r.barang?.nama}
                         </td>
                         <td className="py-2.5 px-4 text-right font-bold text-emerald-700 whitespace-nowrap">
-                          +{r.jumlah_restok ?? r.restok} {r.barang?.satuan}
+                          +{r.jumlah_restok} {r.barang?.satuan_dasar}
                         </td>
                         <td className="py-2.5 px-4">
                           <CustomSelect
@@ -207,9 +207,6 @@ export function PanelRestokBarang({
                             <option value="selesai">Selesai</option>
                             <option value="batal">Batal</option>
                           </CustomSelect>
-                        </td>
-                        <td className="py-2.5 px-4 text-gray-600 min-w-[140px]">
-                          {r.target || "-"}
                         </td>
                       </tr>
                     ))}

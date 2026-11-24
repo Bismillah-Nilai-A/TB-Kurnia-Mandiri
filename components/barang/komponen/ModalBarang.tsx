@@ -94,7 +94,7 @@ export function ModalBarang({
                 <div>
                   <Label>Kategori</Label>
                   <Input
-                    placeholder="Contoh: BAHAN BANGUNAN"
+                    placeholder="Contoh: Material Dasar"
                     value={formData.kategori}
                     onChange={(e) =>
                       setFormData({ ...formData, kategori: e.target.value })
@@ -105,19 +105,20 @@ export function ModalBarang({
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <Label>Merk</Label>
+                  <Label>Nama Barang</Label>
                   <Input
-                    placeholder="Contoh: Tiga Roda / Rucika"
-                    value={formData.merk}
+                    placeholder="Masukkan nama lengkap barang"
+                    value={formData.nama}
                     onChange={(e) =>
-                      setFormData({ ...formData, merk: e.target.value })
+                      setFormData({ ...formData, nama: e.target.value })
                     }
+                    required
                   />
                 </div>
                 <div>
                   <Label>Barcode (Code 128 / EAN)</Label>
                   <Input
-                    placeholder="Contoh: 89970010089"
+                    placeholder="Contoh: 899202600089"
                     value={formData.barcode}
                     onChange={(e) =>
                       setFormData({ ...formData, barcode: e.target.value })
@@ -125,28 +126,73 @@ export function ModalBarang({
                   />
                 </div>
               </div>
-              <div>
-                <Label>Nama Barang</Label>
-                <Input
-                  placeholder="Masukkan nama lengkap barang"
-                  value={formData.nama}
-                  onChange={(e) =>
-                    setFormData({ ...formData, nama: e.target.value })
-                  }
-                  required
-                />
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                <div>
+                  <Label>Satuan Pembelian</Label>
+                  <Input
+                    placeholder="Sak / Dus / Truck"
+                    value={formData.satuan_pembelian}
+                    onChange={(e) =>
+                      setFormData({
+                        ...formData,
+                        satuan_pembelian: e.target.value,
+                      })
+                    }
+                    required
+                  />
+                </div>
+                <div>
+                  <Label>Isi per Satuan Beli</Label>
+                  <Input
+                    type="number"
+                    min={1}
+                    value={formData.isi_per_satuan_beli}
+                    onChange={(e) => {
+                      const isi = e.target.value;
+                      const beliNum = Number(formData.harga_beli) || 0;
+                      const isiNum = Math.max(1, Number(isi) || 1);
+                      const modalUnit = Math.round(beliNum / isiNum);
+                      setFormData({
+                        ...formData,
+                        isi_per_satuan_beli: isi,
+                        harga: beliNum
+                          ? String(Math.round(modalUnit * 1.3))
+                          : formData.harga,
+                      });
+                    }}
+                    required
+                  />
+                </div>
+                <div>
+                  <Label>Satuan Jual Dasar</Label>
+                  <Input
+                    placeholder="Pcs / Sak / Batang"
+                    value={formData.satuan}
+                    onChange={(e) =>
+                      setFormData({ ...formData, satuan: e.target.value })
+                    }
+                    required
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <Label>Harga Modal / Beli (Rp)</Label>
+                  <Label>Harga Beli Pemasok (Rp)</Label>
                   <Input
                     type="number"
                     placeholder="50000"
                     value={formData.harga_beli}
                     onChange={(e) => {
                       const beli = e.target.value;
+                      const isiNum = Math.max(
+                        1,
+                        Number(formData.isi_per_satuan_beli) || 1
+                      );
+                      const modalUnit = beli
+                        ? Math.round(Number(beli) / isiNum)
+                        : 0;
                       const jualOtomatis = beli
-                        ? String(Math.round(Number(beli) * 1.3))
+                        ? String(Math.round(modalUnit * 1.3))
                         : formData.harga;
                       setFormData({
                         ...formData,
@@ -158,7 +204,7 @@ export function ModalBarang({
                   />
                 </div>
                 <div>
-                  <Label>Harga Jual (Rp) [+30%]</Label>
+                  <Label>Harga Jual Awal (Rp) [+30%]</Label>
                   <Input
                     type="number"
                     placeholder="65000"
@@ -170,9 +216,9 @@ export function ModalBarang({
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
-                  <Label>Stok Saat Ini</Label>
+                  <Label>Stok Terkini</Label>
                   <Input
                     type="number"
                     value={formData.stok}
@@ -193,27 +239,6 @@ export function ModalBarang({
                     required
                   />
                 </div>
-                <div>
-                  <Label>Satuan</Label>
-                  <Input
-                    placeholder="pcs / sak / btg"
-                    value={formData.satuan}
-                    onChange={(e) =>
-                      setFormData({ ...formData, satuan: e.target.value })
-                    }
-                    required
-                  />
-                </div>
-              </div>
-              <div>
-                <Label>Keterangan / Spesifikasi</Label>
-                <Input
-                  placeholder="Contoh: 16 kg / 4 Meter / Ukuran 4 inch"
-                  value={formData.keterangan}
-                  onChange={(e) =>
-                    setFormData({ ...formData, keterangan: e.target.value })
-                  }
-                />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t mt-2">
                 <Button
@@ -255,7 +280,7 @@ export function ModalBarang({
                     setMutasiForm({
                       ...mutasiForm,
                       jenis: "masuk",
-                      no_referensi: `BM-${Date.now().toString().slice(-5)}`,
+                      no_referensi: `SJ-${Date.now().toString().slice(-5)}`,
                     })
                   }
                   className={`py-2 px-3 rounded-lg text-xs font-bold border transition cursor-pointer ${
@@ -298,7 +323,8 @@ export function ModalBarang({
                   <option value="">Pilih Barang</option>
                   {items.map((b) => (
                     <option key={b.id} value={b.id}>
-                      [{b.kode_barang}] {b.nama} (Stok: {b.stok} {b.satuan})
+                      [{b.kode_barang}] {b.nama} (Stok: {b.stok}{" "}
+                      {b.satuan_dasar})
                     </option>
                   ))}
                 </CustomSelect>
@@ -318,7 +344,7 @@ export function ModalBarang({
                   />
                 </div>
                 <div>
-                  <Label>No. Referensi / SJ</Label>
+                  <Label>No. Surat Jalan</Label>
                   <Input
                     value={mutasiForm.no_referensi}
                     onChange={(e) =>
@@ -332,19 +358,59 @@ export function ModalBarang({
               </div>
 
               {mutasiForm.jenis === "masuk" ? (
-                <div>
-                  <Label>Nama Pemasok / Supplier (Teks Bebas - D2)</Label>
-                  <Input
-                    placeholder="Contoh: PT Semen Indonesia / Distributor Pipa"
-                    value={mutasiForm.supplier}
-                    onChange={(e) =>
-                      setMutasiForm({ ...mutasiForm, supplier: e.target.value })
-                    }
-                  />
-                </div>
+                <>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div>
+                      <Label>Nama Pemasok</Label>
+                      <Input
+                        placeholder="Distributor Rucika"
+                        value={mutasiForm.supplier}
+                        onChange={(e) =>
+                          setMutasiForm({
+                            ...mutasiForm,
+                            supplier: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
+                    <div>
+                      <Label>Jenis Pembayaran</Label>
+                      <CustomSelect
+                        value={mutasiForm.jenis_bayar || "tunai"}
+                        onChange={(e) =>
+                          setMutasiForm({
+                            ...mutasiForm,
+                            jenis_bayar: e.target.value as "tunai" | "tempo",
+                          })
+                        }
+                        aria-label="Jenis pembayaran pemasok"
+                        className="w-full mt-1"
+                      >
+                        <option value="tunai">Tunai</option>
+                        <option value="tempo">Tempo</option>
+                      </CustomSelect>
+                    </div>
+                  </div>
+                  {mutasiForm.jenis_bayar === "tempo" && (
+                    <div>
+                      <Label>Tanggal Jatuh Tempo</Label>
+                      <Input
+                        type="date"
+                        value={mutasiForm.tanggal_jatuh_tempo}
+                        onChange={(e) =>
+                          setMutasiForm({
+                            ...mutasiForm,
+                            tanggal_jatuh_tempo: e.target.value,
+                          })
+                        }
+                        required
+                      />
+                    </div>
+                  )}
+                </>
               ) : (
                 <div>
-                  <Label>Tujuan / Alasan Keluar</Label>
+                  <Label>Tujuan Keluar</Label>
                   <Input
                     placeholder="Contoh: Pemakaian Proyek / Barang Rusak"
                     value={mutasiForm.tujuan}
@@ -356,9 +422,9 @@ export function ModalBarang({
               )}
 
               <div>
-                <Label>Catatan Keterangan</Label>
+                <Label>Alasan / Keterangan</Label>
                 <Input
-                  placeholder="Catatan tambahan mutasi stok"
+                  placeholder="Alasan mutasi stok"
                   value={mutasiForm.keterangan}
                   onChange={(e) =>
                     setMutasiForm({ ...mutasiForm, keterangan: e.target.value })
@@ -413,7 +479,7 @@ export function ModalBarang({
                   {items.map((b) => (
                     <option key={b.id} value={b.id}>
                       [{b.kode_barang}] {b.nama} (Sisa: {b.stok} / Min:{" "}
-                      {b.stok_min})
+                      {b.stok_minimum})
                     </option>
                   ))}
                 </CustomSelect>
@@ -428,16 +494,6 @@ export function ModalBarang({
                     setRestokForm({ ...restokForm, restok: e.target.value })
                   }
                   required
-                />
-              </div>
-              <div>
-                <Label>Target / Catatan Internal</Label>
-                <Input
-                  placeholder="Contoh: Order minggu depan"
-                  value={restokForm.target}
-                  onChange={(e) =>
-                    setRestokForm({ ...restokForm, target: e.target.value })
-                  }
                 />
               </div>
               <div className="flex justify-end gap-2 pt-3 border-t">
@@ -457,7 +513,7 @@ export function ModalBarang({
         </div>
       )}
 
-      {/* MODAL CETAK LABEL BARCODE (BRG-05) */}
+      {/* MODAL CETAK LABEL BARCODE */}
       {barcodeItem && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4 print:static print:bg-white print:p-0">
           <div className="bg-white rounded-xl max-w-sm w-full p-6 shadow-xl flex flex-col items-center gap-4 print:shadow-none print:border print:border-gray-300">
@@ -483,7 +539,7 @@ export function ModalBarang({
               </p>
               <p className="text-xs font-semibold text-blue-600">
                 Rp {Number(barcodeItem.harga).toLocaleString("id-ID")} /{" "}
-                {barcodeItem.satuan}
+                {barcodeItem.satuan_dasar}
               </p>
               {/* Visualisasi Garis Barcode */}
               <div className="my-2 px-3 py-2 bg-white border border-gray-200 rounded flex flex-col items-center">
