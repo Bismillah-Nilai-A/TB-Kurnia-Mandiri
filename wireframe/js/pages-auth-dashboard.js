@@ -238,9 +238,11 @@
               window.WFUI.statusBadge(k.status) +
               "</td>" +
               '<td class="wf-text-right">' +
-              '<button type="button" class="wf-btn wf-btn-sm wf-btn-primary" data-action="buka-proses-pengiriman" data-id="' +
-              esc(k.id_pengiriman) +
-              '">Proses</button>' +
+              (k.status !== "Selesai"
+                ? '<button type="button" class="wf-btn wf-btn-sm wf-btn-primary" data-action="buka-proses-pengiriman" data-id="' +
+                  esc(k.id_pengiriman) +
+                  '">Proses</button>'
+                : '<span style="color:var(--wf-text-muted);font-size:0.8125rem;">Selesai</span>') +
               "</td>" +
               "</tr>"
             );

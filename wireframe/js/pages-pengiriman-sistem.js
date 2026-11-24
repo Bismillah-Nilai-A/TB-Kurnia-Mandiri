@@ -19,25 +19,32 @@
     const f = window.WF.ui.filters;
     const u = window.WF.ui.currentUser;
     const role = u ? u.role : "admin";
-    const tab = f.pengirimanTab || "penugasan";
+    const rawTab = f.pengirimanTab || "penugasan";
+    // Sesuai SRS (UC-21 vs UC-27): Kasir tidak memiliki tab Laporan Kendala, hanya Daftar Penugasan & Riwayat
+    const tab =
+      role === "kasir" && rawTab === "kendala" ? "penugasan" : rawTab;
+
+    const tabOptions = [
+      {
+        value: "penugasan",
+        label: "Daftar Penugasan (" + db.pengiriman.length + ")",
+      },
+    ];
+    if (role !== "kasir") {
+      tabOptions.push({
+        value: "kendala",
+        label: "Laporan Kendala (" + db.laporan_kendala.length + ")",
+      });
+    }
+    tabOptions.push({
+      value: "riwayat",
+      label: "Riwayat & Bukti Penerimaan",
+    });
 
     const tabsHtml = responsiveTabs({
       filterKey: "pengirimanTab",
       value: tab,
-      options: [
-        {
-          value: "penugasan",
-          label: "Daftar Penugasan (" + db.pengiriman.length + ")",
-        },
-        {
-          value: "kendala",
-          label: "Laporan Kendala (" + db.laporan_kendala.length + ")",
-        },
-        {
-          value: "riwayat",
-          label: "Riwayat & Bukti Penerimaan",
-        },
-      ],
+      options: tabOptions,
     });
 
     // TAB 2: LAPORAN KENDALA PENGIRIMAN
@@ -76,65 +83,67 @@
         ) +
         tabsHtml +
         '<div class="wf-stack">' +
-        '<div class="wf-card">' +
-        '<div class="wf-card-header"><h2 class="wf-card-title">Lapor Kendala Pengiriman</h2></div>' +
-        '<div class="wf-card-body">' +
-        '<form id="wf-form-kendala" class="wf-stack">' +
-        '<div class="wf-grid-2">' +
-        '<div class="wf-field">' +
-        '<label class="wf-label">Penugasan Pengiriman</label>' +
-        customSelect({
-          id: "f-knd-krm",
-          name: "pengiriman_id",
-          value: db.pengiriman[0] ? db.pengiriman[0].id_pengiriman : "",
-          options: db.pengiriman.map(function (p) {
-            return {
-              value: p.id_pengiriman,
-              label:
-                p.no_nota + " - " + p.nama_pelanggan + " (" + p.status + ")",
-            };
-          }),
-        }) +
-        "</div>" +
-        '<div class="wf-field">' +
-        '<label class="wf-label">Jenis Kendala Lapangan</label>' +
-        customSelect({
-          id: "f-knd-jenis",
-          name: "jenis_kendala",
-          value: "Akses Jalan Sempit / Ditutup",
-          options: [
-            {
+        (role === "pengirim"
+          ? '<div class="wf-card">' +
+            '<div class="wf-card-header"><h2 class="wf-card-title">Lapor Kendala Pengiriman</h2></div>' +
+            '<div class="wf-card-body">' +
+            '<form id="wf-form-kendala" class="wf-stack">' +
+            '<div class="wf-grid-2">' +
+            '<div class="wf-field">' +
+            '<label class="wf-label">Penugasan Pengiriman</label>' +
+            customSelect({
+              id: "f-knd-krm",
+              name: "pengiriman_id",
+              value: db.pengiriman[0] ? db.pengiriman[0].id_pengiriman : "",
+              options: db.pengiriman.map(function (p) {
+                return {
+                  value: p.id_pengiriman,
+                  label:
+                    p.no_nota + " - " + p.nama_pelanggan + " (" + p.status + ")",
+                };
+              }),
+            }) +
+            "</div>" +
+            '<div class="wf-field">' +
+            '<label class="wf-label">Jenis Kendala Lapangan</label>' +
+            customSelect({
+              id: "f-knd-jenis",
+              name: "jenis_kendala",
               value: "Akses Jalan Sempit / Ditutup",
-              label: "Akses Jalan Sempit / Ditutup",
-            },
-            {
-              value: "Kendaraan Armada Mengalami Gangguan",
-              label: "Kendaraan Armada Mengalami Gangguan",
-            },
-            {
-              value: "Alamat Tujuan Tidak Ditemukan",
-              label: "Alamat Tujuan Tidak Ditemukan",
-            },
-            {
-              value: "Penerima Tidak Berada di Lokasi",
-              label: "Penerima Tidak Berada di Lokasi",
-            },
-            {
-              value: "Cuaca Buruk / Hujan Deras",
-              label: "Cuaca Buruk / Hujan Deras",
-            },
-          ],
-        }) +
-        "</div>" +
-        "</div>" +
-        '<div class="wf-field">' +
-        '<label for="f-knd-desc" class="wf-label">Deskripsi Detail Kendala</label>' +
-        '<textarea id="f-knd-desc" name="deskripsi" class="wf-textarea" placeholder="Jelaskan situasi di lapangan secara jelas..." required></textarea>' +
-        "</div>" +
-        '<div><button type="submit" class="wf-btn wf-btn-primary">' +
-        icon("check", "wf-icon-sm") +
-        "<span>Simpan Laporan Kendala</span></button></div>" +
-        "</form></div></div>" +
+              options: [
+                {
+                  value: "Akses Jalan Sempit / Ditutup",
+                  label: "Akses Jalan Sempit / Ditutup",
+                },
+                {
+                  value: "Kendaraan Armada Mengalami Gangguan",
+                  label: "Kendaraan Armada Mengalami Gangguan",
+                },
+                {
+                  value: "Alamat Tujuan Tidak Ditemukan",
+                  label: "Alamat Tujuan Tidak Ditemukan",
+                },
+                {
+                  value: "Penerima Tidak Berada di Lokasi",
+                  label: "Penerima Tidak Berada di Lokasi",
+                },
+                {
+                  value: "Cuaca Buruk / Hujan Deras",
+                  label: "Cuaca Buruk / Hujan Deras",
+                },
+              ],
+            }) +
+            "</div>" +
+            "</div>" +
+            '<div class="wf-field">' +
+            '<label for="f-knd-desc" class="wf-label">Deskripsi Detail Kendala</label>' +
+            '<textarea id="f-knd-desc" name="deskripsi" class="wf-textarea" placeholder="Jelaskan situasi di lapangan secara jelas..." required></textarea>' +
+            "</div>" +
+            '<div><button type="submit" class="wf-btn wf-btn-primary">' +
+            icon("check", "wf-icon-sm") +
+            "<span>Simpan Laporan Kendala</span></button></div>" +
+            "</form></div></div>"
+          : "") +
         '<div class="wf-card">' +
         '<div class="wf-card-header"><h2 class="wf-card-title">Riwayat Laporan Kendala</h2></div>' +
         '<div class="wf-table-wrap"><table class="wf-table">' +
@@ -193,9 +202,13 @@
               "</td>" +
               "<td>" +
               (p.foto_bukti_url
-                ? '<span class="wf-badge wf-badge-muted">' +
+                ? '<button type="button" class="wf-btn wf-btn-sm" data-action="detail-penugasan-modal" data-id="' +
+                  esc(p.id_pengiriman) +
+                  '">' +
+                  icon("image", "wf-icon-sm") +
+                  "<span>" +
                   esc(p.foto_bukti_url) +
-                  "</span>"
+                  "</span></button>"
                 : p.alasan_penukaran
                   ? "Pengajuan Penukaran: " + esc(p.alasan_penukaran)
                   : "-") +
@@ -252,10 +265,12 @@
           window.WFUI.statusBadge(p.status) +
           "</td>" +
           '<td class="wf-text-right" style="white-space:nowrap;">' +
-          (role === "pengirim" || role === "admin"
-            ? '<button type="button" class="wf-btn wf-btn-sm wf-btn-primary" data-action="buka-proses-pengiriman" data-id="' +
-              esc(p.id_pengiriman) +
-              '">Proses</button>'
+          (role === "pengirim"
+            ? p.status !== "Selesai"
+              ? '<button type="button" class="wf-btn wf-btn-sm wf-btn-primary" data-action="buka-proses-pengiriman" data-id="' +
+                esc(p.id_pengiriman) +
+                '">Proses</button>'
+              : '<span style="color:var(--wf-text-muted);font-size:0.8125rem;">Selesai</span>'
             : '<button type="button" class="wf-btn wf-btn-sm" data-action="detail-penugasan-modal" data-id="' +
               esc(p.id_pengiriman) +
               '">Detail</button>') +
@@ -272,7 +287,7 @@
           { label: "Penugasan & Proses Kirim" },
         ],
         "Penugasan & Proses Kirim",
-        role === "admin" || role === "kasir"
+        role === "kasir"
           ? '<button type="button" class="wf-btn wf-btn-primary" data-action="open-tambah-penugasan">' +
             icon("plus", "wf-icon-sm") +
             "<span>Buat Penugasan</span></button>"
@@ -380,13 +395,45 @@
       esc(k.id_pengiriman) +
       '">' +
       '<div class="wf-field">' +
-      '<label for="f-krm-bukti" class="wf-label">Bukti Foto Penerimaan &amp; Tanda Terima</label>' +
-      '<input id="f-krm-bukti" name="foto_bukti_url" type="text" class="wf-input" value="' +
+      '<label for="f-krm-bukti-file" class="wf-label">Bukti Foto Penerimaan &amp; Tanda Terima</label>' +
+      '<div class="wf-upload-box">' +
+      '<div class="wf-upload-preview">' +
+      '<svg class="wf-wireframe-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' +
+      '<line x1="0" y1="0" x2="100" y2="100" vector-effect="non-scaling-stroke"></line>' +
+      '<line x1="100" y1="0" x2="0" y2="100" vector-effect="non-scaling-stroke"></line>' +
+      "</svg>" +
+      '<div class="wf-upload-preview-badge">' +
+      icon("camera", "wf-icon-md") +
+      "</div>" +
+      '<div id="f-krm-bukti-preview-text" class="wf-upload-preview-caption">' +
       esc(
         k.foto_bukti_url ||
           "bukti-serah-terima-" + k.no_nota.toLowerCase() + ".jpg"
       ) +
-      '" required />' +
+      "</div>" +
+      "</div>" +
+      '<div class="wf-upload-footer">' +
+      '<div class="wf-upload-meta">' +
+      '<div id="f-krm-bukti-filename" class="wf-upload-filename">' +
+      esc(
+        k.foto_bukti_url ||
+          "bukti-serah-terima-" + k.no_nota.toLowerCase() + ".jpg"
+      ) +
+      "</div>" +
+      '<div class="wf-upload-hint">JPG / PNG (Maks. 5 MB) &middot; Bukti serah terima lapangan</div>' +
+      "</div>" +
+      '<label for="f-krm-bukti-file" class="wf-btn wf-btn-sm" style="cursor:pointer;">' +
+      icon("upload", "wf-icon-sm") +
+      "<span>Pilih / Unggah Foto</span></label>" +
+      '<input id="f-krm-bukti-file" type="file" accept="image/*" class="wf-sr-only" data-action="kirim-pilih-foto" />' +
+      '<input id="f-krm-bukti" name="foto_bukti_url" type="hidden" value="' +
+      esc(
+        k.foto_bukti_url ||
+          "bukti-serah-terima-" + k.no_nota.toLowerCase() + ".jpg"
+      ) +
+      '" />' +
+      "</div>" +
+      "</div>" +
       "</div>" +
       '<button type="submit" class="wf-btn wf-btn-primary">' +
       icon("check", "wf-icon-sm") +

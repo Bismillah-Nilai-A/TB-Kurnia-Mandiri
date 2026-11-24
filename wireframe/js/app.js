@@ -1194,10 +1194,15 @@
           return x.id_pengiriman === id;
         });
         if (!k) break;
+        const adaBukti = Boolean(k.foto_bukti_url);
+        const labelBukti = adaBukti
+          ? k.foto_bukti_url
+          : "Belum ada bukti foto diunggah";
         window.WF.openModal({
           title: "Detail Penugasan Pengiriman (" + k.no_nota + ")",
           bodyHtml:
             '<div class="wf-stack" style="font-size:0.875rem;">' +
+            '<div class="wf-subtle-panel wf-stack" style="gap:6px;">' +
             "<div><strong>Pemesan:</strong> " +
             esc(k.nama_pelanggan) +
             " (" +
@@ -1213,6 +1218,42 @@
             esc(k.nama_pengirim) +
             " &middot; <strong>Status:</strong> " +
             esc(k.status) +
+            "</div>" +
+            (k.alasan_penukaran
+              ? "<div><strong>Pengajuan Penukaran:</strong> " +
+                esc(k.alasan_penukaran) +
+                "</div>"
+              : "") +
+            "</div>" +
+            '<div class="wf-field">' +
+            '<span class="wf-label">Bukti Foto Penerimaan &amp; Tanda Terima</span>' +
+            '<div class="wf-upload-box">' +
+            '<div class="wf-upload-preview">' +
+            '<svg class="wf-wireframe-cross" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">' +
+            '<line x1="0" y1="0" x2="100" y2="100" vector-effect="non-scaling-stroke"></line>' +
+            '<line x1="100" y1="0" x2="0" y2="100" vector-effect="non-scaling-stroke"></line>' +
+            "</svg>" +
+            '<div class="wf-upload-preview-badge">' +
+            icon("image", "wf-icon-md") +
+            "</div>" +
+            '<div class="wf-upload-preview-caption">' +
+            esc(labelBukti) +
+            "</div>" +
+            "</div>" +
+            '<div class="wf-upload-meta">' +
+            '<div class="wf-upload-filename">' +
+            esc(labelBukti) +
+            "</div>" +
+            '<div class="wf-upload-hint">' +
+            (adaBukti
+              ? "Diunggah oleh " +
+                esc(k.nama_pengirim) +
+                " pada " +
+                esc(k.tanggal_terima)
+              : "Menunggu pengirim menyelesaikan serah terima di lokasi pelanggan") +
+            "</div>" +
+            "</div>" +
+            "</div>" +
             "</div>" +
             "</div>",
         });
@@ -1510,6 +1551,14 @@
     } else if (action === "pos-change-nego" && window.WF.ui.pos.cart[idx]) {
       window.WF.ui.pos.cart[idx].harga_nego_input = t.value;
       window.WF.render();
+    } else if (action === "kirim-pilih-foto" && t.files && t.files[0]) {
+      const fname = t.files[0].name;
+      const hiddenEl = document.getElementById("f-krm-bukti");
+      const nameEl = document.getElementById("f-krm-bukti-filename");
+      const prevEl = document.getElementById("f-krm-bukti-preview-text");
+      if (hiddenEl) hiddenEl.value = fname;
+      if (nameEl) nameEl.textContent = fname;
+      if (prevEl) prevEl.textContent = fname;
     }
   });
 
