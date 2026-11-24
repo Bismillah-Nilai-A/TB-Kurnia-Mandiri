@@ -234,7 +234,7 @@ export function useTransaksi() {
       return;
     }
 
-    const noNota = `INV-${new Date().toISOString().slice(0, 10).replace(/-/g, "")}-${Math.floor(100 + Math.random() * 900)}`;
+    const noNota = `INV-${new Date().toISOString().slice(2, 10).replace(/-/g, "")}-${Math.floor(100 + Math.random() * 900)}`;
 
     setSubmitting(true);
     try {
@@ -285,8 +285,7 @@ export function useTransaksi() {
     const matchSearch =
       b.nama.toLowerCase().includes(q) ||
       b.kode_barang.toLowerCase().includes(q) ||
-      (b.barcode || "").toLowerCase().includes(q) ||
-      (b.merk || "").toLowerCase().includes(q);
+      (b.barcode || "").toLowerCase().includes(q);
     return matchCat && matchSearch;
   });
 

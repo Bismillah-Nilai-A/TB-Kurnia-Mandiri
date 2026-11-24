@@ -1,12 +1,30 @@
 import { supabase, logAktivitas } from "@/lib/supabase";
 import type { Database, StatusPengiriman } from "@/lib/types";
 
-export type PengirimanRow = Database["public"]["Tables"]["pengiriman"]["Row"];
+export type PengirimanRow =
+  Database["public"]["Tables"]["pengiriman"]["Row"] & {
+    id: string;
+    transaksi?: {
+      no_nota: string;
+      pelanggan?: { nama: string; alamat: string | null } | null;
+    } | null;
+    pengirim?: { nama: string; username: string } | null;
+    // Properti turunan kompatibilitas untuk komponen UI
+    detail_penerima?: string | null;
+    nama_penerima_aktual?: string | null;
+    foto_bukti_nama?: string | null;
+    foto_bukti_mime?: string | null;
+    alasan_retur?: string | null;
+  };
+
 export type LaporanKendalaRow =
-  Database["public"]["Tables"]["laporan_kendala"]["Row"];
+  Database["public"]["Tables"]["laporan_kendala"]["Row"] & {
+    id: string;
+  };
 
 export type TransaksiLookup = {
   id: string;
+  id_transaksi?: string;
   no_nota: string;
   perlu_dikirim: boolean;
   pelanggan?: { nama: string; alamat: string | null } | null;
@@ -14,6 +32,7 @@ export type TransaksiLookup = {
 
 export type PengirimLookup = {
   id: string;
+  id_pengguna?: string;
   nama: string;
   username: string;
 };
@@ -91,7 +110,13 @@ export async function fetchAllPengirimanData(): Promise<{
   const [krmRes, kdlRes, trxRes, drvRes] = await Promise.all([
     supabase
       .from("pengiriman")
-      .select("*")
+      .select(
+        `
+        *,
+        transaksi:transaksi_id(no_nota, pelanggan:pelanggan_id(nama, alamat)),
+        pengirim:pengirim_id(nama, username)
+      `
+      )
       .order("tanggal_penugasan", { ascending: false }),
     supabase
       .from("laporan_kendala")
@@ -100,25 +125,99 @@ export async function fetchAllPengirimanData(): Promise<{
     supabase
       .from("transaksi")
       .select(
-        "id, no_nota, perlu_dikirim, pelanggan:pelanggan_id(nama, alamat)"
+        "id_transaksi, no_nota, perlu_dikirim, pelanggan:pelanggan_id(nama, alamat)"
       )
       .order("tanggal", { ascending: false })
       .limit(50),
     supabase
       .from("pengguna")
-      .select("id, nama, username")
+      .select("id_pengguna, nama, username")
       .eq("role", "pengirim")
       .eq("status", "aktif"),
   ]);
 
   if (krmRes.error) throw krmRes.error;
 
+  const list: PengirimanRow[] = (
+    (krmRes.data || []) as Array<Record<string, unknown>>
+  ).map((raw) => {
+    const trx = (raw.transaksi as Record<string, unknown>) || null;
+    const plg = (trx?.pelanggan as Record<string, unknown>) || null;
+    const pgr = (raw.pengirim as Record<string, unknown>) || null;
+    const labelPenerima = plg?.nama
+      ? `${String(plg.nama)}${trx?.no_nota ? ` (${String(trx.no_nota)})` : ""}`
+      : trx?.no_nota
+        ? `Pelanggan (${String(trx.no_nota)})`
+        : "Pelanggan CV Kurnia Mandiri";
+    const idKrm = String(raw.id_pengiriman || raw.id);
+
+    return {
+      id_pengiriman: idKrm,
+      id: idKrm,
+      transaksi_id: raw.transaksi_id ? String(raw.transaksi_id) : null,
+      pengirim_id: raw.pengirim_id ? String(raw.pengirim_id) : null,
+      alamat_tujuan: String(raw.alamat_tujuan || ""),
+      status: (raw.status as StatusPengiriman) || "belum_dikirim",
+      foto_bukti_url: raw.foto_bukti_url ? String(raw.foto_bukti_url) : null,
+      alasan_penukaran: raw.alasan_penukaran
+        ? String(raw.alasan_penukaran)
+        : null,
+      tanggal_penugasan: String(raw.tanggal_penugasan),
+      tanggal_terima: raw.tanggal_terima ? String(raw.tanggal_terima) : null,
+      transaksi: trx
+        ? {
+            no_nota: String(trx.no_nota),
+            pelanggan: plg
+              ? {
+                  nama: String(plg.nama),
+                  alamat: plg.alamat ? String(plg.alamat) : null,
+                }
+              : null,
+          }
+        : null,
+      pengirim: pgr
+        ? {
+            nama: String(pgr.nama),
+            username: String(pgr.username),
+          }
+        : null,
+      detail_penerima: labelPenerima,
+      nama_penerima_aktual: plg?.nama ? String(plg.nama) : labelPenerima,
+      foto_bukti_nama: raw.foto_bukti_url ? "bukti-penerimaan.jpg" : null,
+      foto_bukti_mime: "image/jpeg",
+      alasan_retur: raw.alasan_penukaran ? String(raw.alasan_penukaran) : null,
+    };
+  });
+
+  const kendalaList: LaporanKendalaRow[] = (
+    (kdlRes.data || []) as Array<Record<string, unknown>>
+  ).map((k) => ({
+    ...(k as unknown as LaporanKendalaRow),
+    id_laporan: String(k.id_laporan || k.id),
+    id: String(k.id_laporan || k.id),
+  }));
+
+  const transaksiList: TransaksiLookup[] = (
+    (trxRes.data || []) as Array<Record<string, unknown>>
+  ).map((t) => ({
+    ...(t as unknown as TransaksiLookup),
+    id_transaksi: String(t.id_transaksi || t.id),
+    id: String(t.id_transaksi || t.id),
+  }));
+
+  const pengirimList: PengirimLookup[] = (
+    (drvRes.data || []) as Array<Record<string, unknown>>
+  ).map((d) => ({
+    ...(d as unknown as PengirimLookup),
+    id_pengguna: String(d.id_pengguna || d.id),
+    id: String(d.id_pengguna || d.id),
+  }));
+
   return {
-    list: (krmRes.data as PengirimanRow[]) || FALLBACK_PENGIRIMAN,
-    kendalaList: (kdlRes.data as LaporanKendalaRow[]) || FALLBACK_KENDALA,
-    transaksiList:
-      (trxRes.data as unknown as TransaksiLookup[]) || FALLBACK_TRANSAKSI,
-    pengirimList: (drvRes.data as PengirimLookup[]) || FALLBACK_PENGIRIM,
+    list,
+    kendalaList,
+    transaksiList,
+    pengirimList,
   };
 }
 
@@ -129,7 +228,6 @@ export async function createDeliveryDB(
   const payload = {
     transaksi_id: newForm.transaksi_id || null,
     pengirim_id: newForm.pengirim_id || defaultPengirimId || null,
-    detail_penerima: newForm.detail_penerima.trim(),
     alamat_tujuan: newForm.alamat_tujuan.trim(),
     status: "belum_dikirim" as StatusPengiriman,
     tanggal_penugasan: new Date().toISOString(),
@@ -138,9 +236,19 @@ export async function createDeliveryDB(
   const { error: insErr } = await supabase.from("pengiriman").insert(payload);
   if (insErr) throw insErr;
 
+  await supabase.from("notifikasi").insert({
+    jenis: "notifikasi_other",
+    penerima: "muhamadirfan.mi966@gmail.com",
+    saluran: "email",
+    pesan: `Penugasan pengiriman baru dibuat ke alamat: ${payload.alamat_tujuan}.`,
+    status_kirim: "pending",
+    waktu: new Date().toISOString(),
+  });
+  fetch("/api/cron/notifikasi", { method: "POST" }).catch(() => {});
+
   await logAktivitas({
     modul: "Pengiriman",
-    aktivitas: `Menugaskan pengiriman baru ke ${payload.detail_penerima}`,
+    aktivitas: `Buat penugasan kirim`.slice(0, 50),
     dataSesudah: payload,
   });
 }
@@ -149,12 +257,12 @@ export async function mulaiKirimDB(item: PengirimanRow): Promise<void> {
   const { error: updErr } = await supabase
     .from("pengiriman")
     .update({ status: "sedang_dikirim" })
-    .eq("id", item.id);
+    .eq("id_pengiriman", item.id_pengiriman || item.id);
   if (updErr) throw updErr;
 
   await logAktivitas({
     modul: "Pengiriman",
-    aktivitas: `Memulai pengiriman untuk ${item.detail_penerima}`,
+    aktivitas: `Mulai pengiriman ${item.transaksi?.no_nota || ""}`.slice(0, 50),
     dataSebelum: { status: item.status },
     dataSesudah: { status: "sedang_dikirim" },
   });
@@ -173,7 +281,6 @@ export async function updateDeliveryActionDB(params: {
   const {
     selectedItem,
     updateMode,
-    namaPenerimaAktual,
     jenisKendala,
     alasanReturText,
     fotoDataUrl,
@@ -184,7 +291,7 @@ export async function updateDeliveryActionDB(params: {
   if (updateMode === "diterima") {
     if (!fotoDataUrl) {
       throw new Error(
-        "Silakan ambil foto dari kamera atau upload foto bukti penerimaan terlebih dahulu (KRM-B4)."
+        "Silakan ambil foto dari kamera atau upload foto bukti penerimaan terlebih dahulu."
       );
     }
 
@@ -192,7 +299,6 @@ export async function updateDeliveryActionDB(params: {
       fotoFileName || `bukti-${selectedItem.id.slice(0, 8)}-${Date.now()}.jpg`;
     let storedPhotoUrl = fotoDataUrl;
 
-    // Coba upload ke Supabase Storage bucket `bukti-pengiriman` bila tersedia
     try {
       const resBlob = await fetch(fotoDataUrl);
       const blob = await resBlob.blob();
@@ -201,15 +307,14 @@ export async function updateDeliveryActionDB(params: {
         .from("bukti-pengiriman")
         .upload(storagePath, blob, {
           contentType: fotoMimeType || "image/jpeg",
-          upsert: true,
+          upsert: false,
         });
       if (!upErr && upData?.path) {
         const { data: pubUrl } = supabase.storage
           .from("bukti-pengiriman")
           .getPublicUrl(upData.path);
         if (pubUrl?.publicUrl) {
-          // Tetap gunakan Data URL bila bucket privat agar pratinjau langsung tampil
-          storedPhotoUrl = fotoDataUrl;
+          storedPhotoUrl = pubUrl.publicUrl;
         }
       }
     } catch {
@@ -220,55 +325,86 @@ export async function updateDeliveryActionDB(params: {
       .from("pengiriman")
       .update({
         status: "diterima",
-        nama_penerima_aktual:
-          namaPenerimaAktual.trim() || selectedItem.detail_penerima,
         foto_bukti_url: storedPhotoUrl,
-        foto_bukti_nama: finalFileName,
-        foto_bukti_mime: fotoMimeType || "image/jpeg",
         tanggal_terima: new Date().toISOString(),
       })
-      .eq("id", selectedItem.id);
+      .eq("id_pengiriman", selectedItem.id_pengiriman || selectedItem.id);
     if (updErr) throw updErr;
+
+    await supabase.from("notifikasi").insert({
+      jenis: "notifikasi_other",
+      penerima: "muhamadirfan.mi966@gmail.com",
+      saluran: "email",
+      pesan: `Pengiriman untuk ${selectedItem.detail_penerima || "Pelanggan"} telah diterima di lokasi tujuan.`,
+      status_kirim: "pending",
+      waktu: new Date().toISOString(),
+    });
+    fetch("/api/cron/notifikasi", { method: "POST" }).catch(() => {});
 
     await logAktivitas({
       modul: "Pengiriman",
-      aktivitas: `Pengiriman diterima oleh ${namaPenerimaAktual || selectedItem.detail_penerima} (Foto: ${finalFileName})`,
+      aktivitas: `Pengiriman selesai ${selectedItem.transaksi?.no_nota || ""}`.slice(
+        0,
+        50
+      ),
       dataSesudah: {
         status: "diterima",
-        nama_penerima_aktual: namaPenerimaAktual,
-        foto_bukti_nama: finalFileName,
       },
     });
   } else if (updateMode === "retur") {
     if (!alasanReturText.trim()) {
-      throw new Error("Alasan retur wajib diisi.");
+      throw new Error("Alasan pengajuan penukaran wajib diisi.");
     }
+
+    // Sesuai Class Diagram & ERD: Pengiriman.+catatPengajuanPenukaran() & Tabel Penukaran (menyimpan foto di foto_bukti_url)
     const { error: updErr } = await supabase
       .from("pengiriman")
       .update({
         status: "gagal",
-        alasan_retur: alasanReturText.trim(),
+        alasan_penukaran: alasanReturText.trim(),
         ...(fotoDataUrl
           ? {
               foto_bukti_url: fotoDataUrl,
-              foto_bukti_nama: fotoFileName || `retur-${Date.now()}.jpg`,
-              foto_bukti_mime: fotoMimeType || "image/jpeg",
             }
           : {}),
       })
-      .eq("id", selectedItem.id);
+      .eq("id_pengiriman", selectedItem.id_pengiriman || selectedItem.id);
     if (updErr) throw updErr;
+
+    if (selectedItem.transaksi_id) {
+      await supabase.from("penukaran").insert({
+        transaksi_id: selectedItem.transaksi_id,
+        status: "menunggu",
+        alasan_penukaran: alasanReturText.trim(),
+        selisih_harga: 0,
+        tanggal_pengajuan: new Date().toISOString(),
+      });
+    }
+
+    await supabase.from("notifikasi").insert({
+      jenis: "notifikasi_other",
+      penerima: "muhamadirfan.mi966@gmail.com",
+      saluran: "email",
+      pesan: `Pengajuan penukaran barang dicatat dari pengiriman ${selectedItem.detail_penerima || ""}: ${alasanReturText.trim()}`,
+      status_kirim: "pending",
+      waktu: new Date().toISOString(),
+    });
+    fetch("/api/cron/notifikasi", { method: "POST" }).catch(() => {});
 
     await logAktivitas({
       modul: "Pengiriman",
-      aktivitas: `Mencatat retur pengiriman ${selectedItem.detail_penerima}: ${alasanReturText}`,
-      dataSesudah: { status: "gagal", alasan_retur: alasanReturText },
+      aktivitas: `Pengajuan penukaran pengiriman`.slice(0, 50),
+      dataSesudah: {
+        status: "gagal",
+        alasan_penukaran: alasanReturText.trim(),
+      },
     });
   } else {
     // Laporan Kendala di perjalanan sesuai Class Diagram: LaporanKendala.+buatLaporan()
+    const pengirimanId = selectedItem.id_pengiriman || selectedItem.id;
     const { error: kdlErr } = await supabase.from("laporan_kendala").insert({
-      pengiriman_id: selectedItem.id,
-      jenis_kendala: jenisKendala,
+      pengiriman_id: pengirimanId,
+      jenis_kendala: jenisKendala.slice(0, 30),
       deskripsi: alasanReturText.trim(),
       created_at: new Date().toISOString(),
     });
@@ -277,21 +413,29 @@ export async function updateDeliveryActionDB(params: {
     const { error: updErr } = await supabase
       .from("pengiriman")
       .update({
-        alasan_retur: `[KENDALA: ${jenisKendala}] ${alasanReturText.trim()}`,
+        alasan_penukaran: `[KENDALA: ${jenisKendala}] ${alasanReturText.trim()}`,
         ...(fotoDataUrl
           ? {
               foto_bukti_url: fotoDataUrl,
-              foto_bukti_nama: fotoFileName || `kendala-${Date.now()}.jpg`,
-              foto_bukti_mime: fotoMimeType || "image/jpeg",
             }
           : {}),
       })
-      .eq("id", selectedItem.id);
+      .eq("id_pengiriman", pengirimanId);
     if (updErr) throw updErr;
+
+    await supabase.from("notifikasi").insert({
+      jenis: "notifikasi_other",
+      penerima: "muhamadirfan.mi966@gmail.com",
+      saluran: "email",
+      pesan: `Laporan kendala pengiriman (${jenisKendala}) pada ${selectedItem.detail_penerima || ""}: ${alasanReturText.trim()}`,
+      status_kirim: "pending",
+      waktu: new Date().toISOString(),
+    });
+    fetch("/api/cron/notifikasi", { method: "POST" }).catch(() => {});
 
     await logAktivitas({
       modul: "Kendala Pengiriman",
-      aktivitas: `Melaporkan kendala pengiriman (${jenisKendala}) ${selectedItem.detail_penerima}: ${alasanReturText}`,
+      aktivitas: `Kendala pengiriman (${jenisKendala})`.slice(0, 50),
       dataSesudah: {
         pengiriman_id: selectedItem.id,
         jenis_kendala: jenisKendala,
