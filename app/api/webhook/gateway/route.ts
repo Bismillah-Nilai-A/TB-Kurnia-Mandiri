@@ -76,6 +76,7 @@ export async function POST(req: NextRequest) {
 
     if (isSuccess) {
       const nominal = Number(gross_amount) || Number(trx.total);
+      const trxId = trx.id_transaksi || trx.id;
 
       await supabase
         .from("transaksi")
@@ -84,10 +85,10 @@ export async function POST(req: NextRequest) {
           sisa_tagihan: 0,
           status_bayar: "lunas",
         })
-        .eq("id", trx.id);
+        .eq("id_transaksi", trxId);
 
       await supabase.from("pembayaran").insert({
-        transaksi_id: trx.id,
+        transaksi_id: trxId,
         metode: payment_type === "qris" ? "qris" : "va",
         nominal,
         referensi_gateway: transaction_id || String(order_id),
@@ -97,7 +98,7 @@ export async function POST(req: NextRequest) {
 
       await supabase.from("log_aktivitas").insert({
         modul: "Payment Gateway",
-        aktivitas: `Webhook Midtrans: Pembayaran lunas untuk nota ${trx.no_nota}`,
+        aktivitas: `Webhook lunas nota ${trx.no_nota}`.slice(0, 50),
         data_sesudah: {
           order_id,
           transaction_status,
@@ -107,12 +108,13 @@ export async function POST(req: NextRequest) {
         waktu: new Date().toISOString(),
       });
     } else if (isFailed) {
+      const trxId = trx.id_transaksi || trx.id;
       await supabase
         .from("transaksi")
         .update({
           status_bayar: "dibatalkan",
         })
-        .eq("id", trx.id);
+        .eq("id_transaksi", trxId);
     }
 
     return NextResponse.json({ status: "ok", order_id });

@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
           .update({
             status_kirim: ok ? "terkirim" : "gagal",
           })
-          .eq("id", item.id);
+          .eq("id_notifikasi", item.id_notifikasi || item.id);
 
         if (ok) sentCount++;
         else failCount++;
